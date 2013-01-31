@@ -7,8 +7,6 @@
 #include <fcntl.h>
 
 
-int fdLexemas;
-int fdTabla;
 FILE * fuente;
 char escritura[BUFSIZ];
 
@@ -80,13 +78,11 @@ int istipos_de_dato(char str[]) {
 void lexema(char *l, char *t){
 	memset(escritura, '\0', BUFSIZ);
     sprintf(escritura,"%s\t%s\n", l, t);
-    write(fdLexemas, escritura, BUFSIZ);
 }
 
 void tabla(char *l){
 	memset(escritura, '\0', BUFSIZ);
     sprintf(escritura,"%s\n", l);
-    write(fdTabla, escritura, BUFSIZ);
 }
 
 
@@ -521,6 +517,7 @@ int strings(automata *a , char c) {
 				return 0;
 			}
 			(*a).estado = -1;
+            return 0;
 			break;
 		case 1:
 			if ((int)c != 34) {
@@ -670,6 +667,7 @@ int logicos(automata *a , char c) {
 
 
 automata ar[11];
+
 void inicia(){
     
 	ar[0].funcion = comentarios;
