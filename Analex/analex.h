@@ -7,7 +7,6 @@
 #include <fcntl.h>
 
 
-FILE * fuente;
 char escritura[BUFSIZ];
 
 char *reservadas[33] = {
@@ -78,7 +77,7 @@ int istipos_de_dato(char str[]) {
 
 
 
-int automataNumerosReales(automata *a , char c) {
+int reales(automata *a , char c) {
 	if (isComment == 1 || isString == 1) {(*a).estado = -1;}
 	switch ((*a).estado) {
 		case 0:
@@ -134,7 +133,6 @@ int automataNumerosReales(automata *a , char c) {
 				return 0;
 			} else {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Numero Real");
-				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
 			break;
@@ -177,10 +175,8 @@ int numeros(automata *a , char c) {
 				return 0;
 			} else if (c != '.'){
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Numero Natural");
-				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			} else {
-				// Posiblemente un real
 				(*a).estado = -1;
 				return 0;
 			}
@@ -223,7 +219,6 @@ int ids(automata *a , char c) {
 				} else {
 					fprintf(stdout, "%s\t%s\n",(*a).buffer,"ID");
 				}
-				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
 			return 0;
@@ -291,7 +286,6 @@ int puntuacion(automata *a , char c){
                 return 0;
             }else{
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Signo de puntuacion");
-				fseek(fuente, -1, SEEK_CUR);
 				return 1;
             } 
             return 0;
@@ -357,7 +351,6 @@ int asignacion(automata *a, char c){
 			break;
 		case 2:
 			fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de asignacion");
-			fseek(fuente, -1, SEEK_CUR);
 			return 1;
 			break;
 		case 3:
@@ -374,7 +367,6 @@ int asignacion(automata *a, char c){
             
             if ((isdigit(c) || c == ' ' || isalpha(c)) && isComment == 0) {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador Aritmetico");
-				fseek(fuente, -1, SEEK_CUR);
                 (*a).estado = -1;
 				return 1;
 			}
@@ -453,7 +445,6 @@ int operadores_matematicos(automata *a , char c) {
 		case 1:
 			if ((isdigit(c) || c == ' ' || isalpha(c)) && isComment == 0) {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador Aritmetico");
-				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
 			return 0;
@@ -461,7 +452,6 @@ int operadores_matematicos(automata *a , char c) {
 		case 2:
 			if ((isdigit(c) || c == ' ' || isalpha(c)) && isComment == 0) {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador Aritmetico o Apuntador");
-				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
 			return 0;
@@ -499,7 +489,6 @@ int strings(automata *a , char c) {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				return 0;
 			} else {
-				// Si es " que cierra
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"String");
 				return 1;
@@ -570,7 +559,6 @@ int comparacion(automata *a , char c) {
 				return 1;
 			} else {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de comparacion");
-				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
 			return 0;
@@ -604,7 +592,6 @@ int logicos(automata *a , char c) {
 			if (c == ' ' || c == '\n') {
 				return 0;
 			}
-			// Si comienza con algo mas 
 			(*a).estado = -1;
 			return 0;
 			break;
@@ -642,7 +629,7 @@ void inicia(){
     ar[3].funcion = comparacion;
     ar[4].funcion = asignacion;
     ar[5].funcion = numeros;
-    ar[6].funcion = numeros;
+    ar[6].funcion = reales;
     ar[7].funcion = puntuacion;
     ar[8].funcion = strings;
     ar[9].funcion = conjuntos;

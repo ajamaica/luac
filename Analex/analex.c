@@ -10,6 +10,8 @@ int main (int argc, const char * argv[]) {
 	
     argv[1] = "codigo.txt";
     
+    FILE *fuente;
+    
 	if((fuente=fopen(argv[1],"r")) == NULL){
 		fprintf(stderr, "Error: %s",argv[1]);
 		return -1;
