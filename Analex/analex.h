@@ -75,15 +75,7 @@ int istipos_de_dato(char str[]) {
 	return 0;
 }
 
-void lexema(char *l, char *t){
-	memset(escritura, '\0', BUFSIZ);
-    sprintf(escritura,"%s\t%s\n", l, t);
-}
 
-void tabla(char *l){
-	memset(escritura, '\0', BUFSIZ);
-    sprintf(escritura,"%s\n", l);
-}
 
 
 int automataNumerosReales(automata *a , char c) {
@@ -142,8 +134,6 @@ int automataNumerosReales(automata *a , char c) {
 				return 0;
 			} else {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Numero Real");
-				lexema((*a).buffer, "Numero Real");
-				// Como leo un caracter despues y no es digito, regreso el apuntador
 				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
@@ -187,7 +177,6 @@ int numeros(automata *a , char c) {
 				return 0;
 			} else if (c != '.'){
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Numero Natural");
-				lexema((*a).buffer, "Numero Natural");
 				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			} else {
@@ -229,15 +218,11 @@ int ids(automata *a , char c) {
 			} else {
 				if (isKeyword((*a).buffer)) {
 					fprintf(stdout, "%s\t%s\n",(*a).buffer,"Reservada");
-					lexema((*a).buffer, "Reservada");
 				} else if (istipos_de_dato((*a).buffer)) {
 					fprintf(stdout, "%s\t%s\n",(*a).buffer,"Tipo de Dato");
-					lexema((*a).buffer, "Tipo de Dato");
 				} else {
 					fprintf(stdout, "%s\t%s\n",(*a).buffer,"ID");
-					lexema((*a).buffer, "ID");
 				}
-				tabla((*a).buffer);
 				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
@@ -276,7 +261,6 @@ int comentarios(automata *a, char c){
 				return 0;
         	} else {
       		    fprintf(stdout, "%s\t%s\n",(*a).buffer,"Comentario");
-				lexema((*a).buffer, "Comentario");
 				return 1;
       		}
 			return 0;
@@ -307,7 +291,6 @@ int puntuacion(automata *a , char c){
                 return 0;
             }else{
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Signo de puntuacion");
-				lexema((*a).buffer, "Signo de puntuacion");
 				fseek(fuente, -1, SEEK_CUR);
 				return 1;
             } 
@@ -367,7 +350,6 @@ int asignacion(automata *a, char c){
 			if(c == '='){
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de asignacion");
-				lexema((*a).buffer, "Operador de asignacion");
 				return 1;
 			}
 			(*a).estado = -1;
@@ -375,7 +357,6 @@ int asignacion(automata *a, char c){
 			break;
 		case 2:
 			fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de asignacion");
-			lexema((*a).buffer, "Operador de asignacion");
 			fseek(fuente, -1, SEEK_CUR);
 			return 1;
 			break;
@@ -383,7 +364,6 @@ int asignacion(automata *a, char c){
 			if(c == '+'){
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de asignacion");
-				lexema((*a).buffer, "Operador de asignacion");
 				return 1;
 			}
 			(*a).estado = -1;
@@ -394,7 +374,6 @@ int asignacion(automata *a, char c){
             
             if ((isdigit(c) || c == ' ' || isalpha(c)) && isComment == 0) {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador Aritmetico");
-				lexema((*a).buffer, "Operador Aritmetico");
 				fseek(fuente, -1, SEEK_CUR);
                 (*a).estado = -1;
 				return 1;
@@ -417,7 +396,6 @@ int asignacion(automata *a, char c){
             if(c == '[' || c == ']'){
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Apertura // Cierre de Agrupador");
-				lexema((*a).buffer, "Apertura // Cierre de Agrupador");
                 (*a).estado = -1;
 				return 1;
 			}
@@ -446,7 +424,6 @@ int conjuntos(automata *a , char c) {
 			if ((c == '(') || (c == ')') || (c == '{') || (c == '}')) {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de Agrupacion");
-				lexema((*a).buffer, "Operador de Agrupacion");
 				return 1;
 			}
 			return 0;
@@ -476,7 +453,6 @@ int operadores_matematicos(automata *a , char c) {
 		case 1:
 			if ((isdigit(c) || c == ' ' || isalpha(c)) && isComment == 0) {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador Aritmetico");
-				lexema((*a).buffer, "Operador Aritmetico");
 				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
@@ -485,7 +461,6 @@ int operadores_matematicos(automata *a , char c) {
 		case 2:
 			if ((isdigit(c) || c == ' ' || isalpha(c)) && isComment == 0) {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador Aritmetico o Apuntador");
-				lexema((*a).buffer, "Operador Aritmetico o Apuntador");
 				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
@@ -527,7 +502,6 @@ int strings(automata *a , char c) {
 				// Si es " que cierra
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"String");
-				lexema((*a).buffer, "String");
 				return 1;
 			}
 			return 0;
@@ -539,7 +513,6 @@ int strings(automata *a , char c) {
 			} else {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Char");
-				lexema((*a).buffer, "Char");
 				return 1;
 			}
 			return 0;
@@ -585,7 +558,6 @@ int comparacion(automata *a , char c) {
 			if (c == '=') {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de comparacion");
-				lexema((*a).buffer, "Operador de comparacion");
 				return 1;
 			}
 			(*a).estado = -1;
@@ -595,11 +567,9 @@ int comparacion(automata *a , char c) {
 			if (c == '=') {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de comparacion");
-				lexema((*a).buffer, "Operador de comparacion");
 				return 1;
 			} else {
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador de comparacion");
-				lexema((*a).buffer, "Operador de comparacion");
 				fseek(fuente, -1, SEEK_CUR);
 				return 1;
 			}
@@ -629,7 +599,6 @@ int logicos(automata *a , char c) {
 			if (c == '!') {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador logico");
-				lexema((*a).buffer, "Operador logico");
 				return 1;
 			}
 			if (c == ' ' || c == '\n') {
@@ -643,7 +612,6 @@ int logicos(automata *a , char c) {
 			if (c == '&') {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador logico");
-				lexema((*a).buffer, "Operador logico");
 				return 1;
 			}
 			(*a).estado = -1;
@@ -653,7 +621,6 @@ int logicos(automata *a , char c) {
 			if (c == '|') {
 				sprintf((*a).buffer+getLastIndex((*a).buffer), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buffer,"Operador logico");
-				lexema((*a).buffer, "Operador logico");
 				return 1;
 			}
 			(*a).estado = -1;
@@ -666,7 +633,6 @@ int logicos(automata *a , char c) {
 }
 
 
-automata ar[11];
 
 void inicia(){
     
