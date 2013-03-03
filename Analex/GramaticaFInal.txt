@@ -1,0 +1,50 @@
+# numer = [1-9]*
+# binop = [+ / - + or and < > <= >? == ~=]*
+# string = [a-zA-Z]
+
+CHUNK -> BLOCK .
+ 
+BLOCK -> SCOPE STATLIST .
+BLOCK -> SCOPE STATLIST LASTSTAT SEMI .
+                 
+SEMI -> ; .
+SEMI-> .
+ 
+SCOPE -> SCOPE STATLIST BINDING SEMI .
+SCOPE ->  .
+ 
+EXP -> EXP binop EXP2 .
+EXP ->  true .
+EXP ->  false .
+EXP -> numer .
+EXP -> string .
+EXP -> PREFIXEXP .
+               
+EXP2 -> true .
+EXP2 -> false .
+EXP2 -> numer .
+EXP2 -> string .
+               
+ 
+STATLIST -> STATLIST STAT SEMI .
+STATLIST -> .
+ 
+STAT -> while EXP do BLOCK end .
+STAT -> if CONDS end .
+               
+CONDS -> CONDLIST  .
+CONDS -> CONDLIST else BLOCK .
+                 
+CONDLIST -> COND  .
+CONDLIST -> CONDLIST elseif COND .
+                       
+COND -> EXP then BLOCK .
+ 
+LASTSTAT -> return EXP .
+ 
+BINDING -> local ID  .
+BINDING -> local ID = EXP . # Se pone tipo de dato ID a tipo local 
+BINDING -> ID = EXP . 
+                       
+PREFIXEXP -> ID .
+PREFIXEXP -> ( EXP ) .

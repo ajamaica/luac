@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D062748216D17B7E0064C3B6 /* anasin.c in Sources */ = {isa = PBXBuildFile; fileRef = D062748116D17B7E0064C3B6 /* anasin.c */; };
+		D06274CC16D196C40064C3B6 /* Stack.c in Sources */ = {isa = PBXBuildFile; fileRef = D06274CA16D196C30064C3B6 /* Stack.c */; };
+		D06274CE16D1B72D0064C3B6 /* List.h in Sources */ = {isa = PBXBuildFile; fileRef = D06274CD16D1B72D0064C3B6 /* List.h */; };
 		DD9F13171416C92000BE4765 /* analex.c in Sources */ = {isa = PBXBuildFile; fileRef = DD9F13161416C92000BE4765 /* analex.c */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +27,14 @@
 
 /* Begin PBXFileReference section */
 		8DD76FB20486AB0100D96B5E /* Analizador Lexico */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Analizador Lexico"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D062748116D17B7E0064C3B6 /* anasin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = anasin.c; sourceTree = "<group>"; };
+		D062748316D17DB10064C3B6 /* anasin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anasin.h; sourceTree = "<group>"; };
+		D06274CA16D196C30064C3B6 /* Stack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Stack.c; sourceTree = "<group>"; };
+		D06274CB16D196C40064C3B6 /* Stack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stack.h; sourceTree = "<group>"; };
+		D06274CD16D1B72D0064C3B6 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		D0DDE75916E40492002760DC /* FINALFINAL.xls */ = {isa = PBXFileReference; lastKnownFileType = file; path = FINALFINAL.xls; sourceTree = "<group>"; };
+		D0DDE75A16E404B4002760DC /* GramaticaFInal.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = GramaticaFInal.txt; sourceTree = "<group>"; };
+		D0DDE75B16E404D2002760DC /* Regrex */ = {isa = PBXFileReference; lastKnownFileType = text; path = Regrex; sourceTree = "<group>"; };
 		DD9F13151416C92000BE4765 /* analex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = analex.h; sourceTree = "<group>"; };
 		DD9F13161416C92000BE4765 /* analex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = analex.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,8 +63,16 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				D0DDE75A16E404B4002760DC /* GramaticaFInal.txt */,
+				D0DDE75916E40492002760DC /* FINALFINAL.xls */,
 				DD9F13151416C92000BE4765 /* analex.h */,
 				DD9F13161416C92000BE4765 /* analex.c */,
+				D062748316D17DB10064C3B6 /* anasin.h */,
+				D062748116D17B7E0064C3B6 /* anasin.c */,
+				D06274CA16D196C30064C3B6 /* Stack.c */,
+				D06274CB16D196C40064C3B6 /* Stack.h */,
+				D06274CD16D1B72D0064C3B6 /* List.h */,
+				D0DDE75B16E404D2002760DC /* Regrex */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -121,6 +140,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD9F13171416C92000BE4765 /* analex.c in Sources */,
+				D062748216D17B7E0064C3B6 /* anasin.c in Sources */,
+				D06274CC16D196C40064C3B6 /* Stack.c in Sources */,
+				D06274CE16D1B72D0064C3B6 /* List.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +160,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = "Analizador Lexico";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
 			};
 			name = Debug;
 		};
@@ -150,14 +172,14 @@
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = "Analizador Lexico";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
 			};
 			name = Release;
 		};
 		1DEB928A08733DD80010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -165,18 +187,20 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
+				STRIP_INSTALLED_PRODUCT = YES;
 			};
 			name = Debug;
 		};
 		1DEB928B08733DD80010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
+				STRIP_INSTALLED_PRODUCT = YES;
 			};
 			name = Release;
 		};

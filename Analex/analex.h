@@ -4,14 +4,20 @@
 #include <ctype.h>
 #include <fcntl.h>
 
+char buf[100];
+FILE * fuente;
+
+
 typedef struct worker {
 	char buf[100];
 	int estado;
 	int (*funcion)(struct worker *a,char c);
 }worker;
-worker ar[11];
 
-char escritura[100];
+worker ar[11];
+char escritura[BUFSIZ];
+FILE *fuente;
+int fdLexemas;
 int commentariossi,stringsi;
 
 char *reservadas[33] = {
@@ -29,6 +35,12 @@ void reinicia(worker arr[]){
     }
 	commentariossi = 0;
 	stringsi = 0;
+}
+
+void lexema(char *l, char *t){
+    sprintf(escritura,"%s\n%s\n", l, t);
+    int tamano = strlen(escritura);
+    write(fdLexemas, escritura, tamano);
 }
 
 int ultimo(char buf[]) {
@@ -71,6 +83,7 @@ int reales(worker *a , char c) {
 		case 0:
 			if (c == '+' || c == '-') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
+                
 				(*a).estado = 2;
 				return 0;
 			}
@@ -121,6 +134,7 @@ int reales(worker *a , char c) {
 				return 0;
 			} else {
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Real");
+				lexema((*a).buf,"Numero Real" );
 				return 1;
 			}
 			break;
@@ -163,6 +177,7 @@ int numeros(worker *a , char c) {
 				return 0;
 			} else if (c != '.'){
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Natural");
+                lexema((*a).buf,"Numero Natural" );
 				return 1;
 			} else {
 				(*a).estado = -1;
@@ -196,6 +211,7 @@ int puntuacion(worker *a , char c){
                 return 0;
             }else{
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Puntuación");
+                lexema((*a).buf,"Puntuación" );
 				return 1;
             }
             return 0;
@@ -253,6 +269,7 @@ int asignacion(worker *a, char c){
 			if(c == '='){
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Asignacion");
+				lexema((*a).buf,"Asignacion" );
 				return 1;
 			}
 			(*a).estado = -1;
@@ -260,12 +277,14 @@ int asignacion(worker *a, char c){
 			break;
 		case 2:
 			fprintf(stdout, "%s\t%s\n",(*a).buf,"Asignacion");
+			lexema((*a).buf,"Asignacion" );
 			return 1;
 			break;
 		case 3:
 			if(c == '+'){
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Asignacion");
+				lexema((*a).buf,"Asignacion" );
 				return 1;
 			}
 			(*a).estado = -1;
@@ -276,6 +295,7 @@ int asignacion(worker *a, char c){
             
             if ((isdigit(c) || c == ' ' || isalpha(c)) && commentariossi == 0) {
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Aritmetico");
+				lexema((*a).buf,"Asignacion" );
                 (*a).estado = -1;
 				return 1;
 			}
@@ -297,6 +317,7 @@ int asignacion(worker *a, char c){
             if(c == '[' || c == ']'){
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Apertura // Cierre de Agrupador");
+				lexema((*a).buf,"Apertura // Cierre de Agrupador" );
                 (*a).estado = -1;
 				return 1;
 			}
@@ -340,11 +361,14 @@ int ids(worker *a , char c) {
 				return 0;
 			} else {
 				if (verificaReservada((*a).buf)) {
-					fprintf(stdout, "%s\t%s\n",(*a).buf,"Reservada");
+					fprintf(stdout, "%s\t%s\n",(*a).buf,(*a).buf);
+					lexema((*a).buf,(*a).buf );
 				} else if (verificaTipoDeDato((*a).buf)) {
 					fprintf(stdout, "%s\t%s\n",(*a).buf,"Tipo de Dato");
+					lexema((*a).buf,"Tipo de Dato" );
 				} else {
 					fprintf(stdout, "%s\t%s\n",(*a).buf,"ID");
+					lexema((*a).buf,"ID" );
 				}
 				return 1;
 			}
@@ -383,6 +407,7 @@ int comentarios(worker *a, char c){
 				return 0;
         	} else {
       		    fprintf(stdout, "%s\t%s\n",(*a).buf,"Comentario");
+				lexema((*a).buf,"Comentario" );
 				return 1;
       		}
 			return 0;
@@ -400,6 +425,7 @@ int conjuntos(worker *a , char c) {
 			if ((c == '(') || (c == ')') || (c == '{') || (c == '}')) {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Agrupador");
+				lexema((*a).buf,"Agrupador" );
 				return 1;
 			}
 			return 0;
@@ -424,7 +450,8 @@ int operadores_matematicos(worker *a , char c) {
 			return 0;
 		case 1:
 			if ((isdigit(c) || c == ' ' || isalpha(c)) && commentariossi == 0) {
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Artirmetico");
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"Artimetico");
+				lexema((*a).buf,"Aritmetico" );
 				return 1;
 			}
 			return 0;
@@ -464,6 +491,7 @@ int strings(worker *a , char c) {
 			} else {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"String");
+				lexema((*a).buf,"String" );
 				return 1;
 			}
 			return 0;
@@ -475,6 +503,7 @@ int strings(worker *a , char c) {
 			} else {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Char");
+				lexema((*a).buf,"char" );
 				return 1;
 			}
 			return 0;
@@ -520,6 +549,7 @@ int comparacion(worker *a , char c) {
 			if (c == '=') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
+				lexema((*a).buf,"Comparacion" );
 				return 1;
 			}
 			(*a).estado = -1;
@@ -529,9 +559,11 @@ int comparacion(worker *a , char c) {
 			if (c == '=') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
+				lexema((*a).buf,"Comparacion" );
 				return 1;
 			} else {
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
+				lexema((*a).buf,"Comparacion" );
 				return 1;
 			}
 			return 0;
@@ -560,6 +592,7 @@ int logicos(worker *a , char c) {
 			if (c == '!') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Operador logico");
+				lexema((*a).buf,"Operador logico" );
 				return 1;
 			}
 			if (c == ' ' || c == '\n') {
@@ -572,6 +605,7 @@ int logicos(worker *a , char c) {
 			if (c == '&') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Logico");
+				lexema((*a).buf,"Logico" );
 				return 1;
 			}
 			(*a).estado = -1;
@@ -581,6 +615,7 @@ int logicos(worker *a , char c) {
 			if (c == '|') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Logico");
+				lexema((*a).buf,"Logico" );
 				return 1;
 			}
 			(*a).estado = -1;
@@ -598,7 +633,6 @@ int logicos(worker *a , char c) {
 
 
 void inicia(){
-    
 	ar[0].funcion = comentarios;
     ar[1].funcion = ids;
     ar[2].funcion = logicos;
@@ -613,4 +647,83 @@ void inicia(){
 	reinicia(ar);
 }
 
+
+int Analex(){
+    
+    printf("------- ANALEX -------");
+	
+    char *file = "codigo.txt";
+    
+    
+    
+	if((fuente=fopen(file,"r")) == NULL){
+		fprintf(stderr, "Error: %s",file);
+		return 1;
+	}
+    
+    if ((fdLexemas=open("lexemas.txt",O_WRONLY | O_CREAT | O_TRUNC,0666)) < 0) {
+		fprintf(stderr, "Error al crear archivo lexemas.txt");
+		return 1;
+	}
+	
+    inicia();
+	
+	char leido;
+	
+	while ((leido = getc(fuente)) != EOF) {
+		
+		if (ar[0].funcion(&ar[0],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		if (ar[1].funcion(&ar[1],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		if (ar[2].funcion(&ar[2],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		if (ar[3].funcion(&ar[3],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		if (ar[4].funcion(&ar[4],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		if (ar[5].funcion(&ar[5],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		if (ar[6].funcion(&ar[6],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		
+		if (ar[7].funcion(&ar[7],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		
+		if (ar[8].funcion(&ar[8],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		
+		if (ar[9].funcion(&ar[9],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		
+		if (ar[10].funcion(&ar[10],leido) == 1) {
+			reinicia(ar);
+			continue;
+		}
+		
+	}
+    
+	fclose(fuente);
+    return 0;
+}
 
