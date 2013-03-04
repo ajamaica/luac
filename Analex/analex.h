@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <fcntl.h>
+#include "tablasim.h"
 
 char buf[100];
 FILE * fuente;
@@ -13,7 +14,7 @@ typedef struct worker {
 	int estado;
 	int (*funcion)(struct worker *a,char c);
 }worker;
-
+simbolo *ta;
 worker ar[11];
 char escritura[BUFSIZ];
 FILE *fuente;
@@ -133,6 +134,14 @@ int reales(worker *a , char c) {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				return 0;
 			} else {
+                
+                simbolo *sim = (simbolo *) malloc(sizeof(simbolo));
+                char buff[100];
+                sprintf(buff, "%s", (*a).buf);
+                sim->nombre =  buf;
+                sim->tipo_de_dato = "Numero Real";
+                insertar(&sim, ta);
+                
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Real");
 				lexema((*a).buf,"Numero Real" );
 				return 1;
@@ -176,6 +185,15 @@ int numeros(worker *a , char c) {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				return 0;
 			} else if (c != '.'){
+                
+                simbolo *sim = (simbolo *) malloc(sizeof(simbolo));
+                char buff[100];
+                sprintf(buff, "%s", (*a).buf);
+                sim->nombre =  buf;
+                sim->tipo_de_dato = "Numero Natural";
+                insertar(&sim, ta);
+                
+                
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Natural");
                 lexema((*a).buf,"Numero Natural" );
 				return 1;
@@ -367,6 +385,14 @@ int ids(worker *a , char c) {
 					fprintf(stdout, "%s\t%s\n",(*a).buf,"Tipo de Dato");
 					lexema((*a).buf,"Tipo de Dato" );
 				} else {
+                    
+                    simbolo *sim = (simbolo *) malloc(sizeof(simbolo));
+                    char buff[100];
+                    sprintf(buff, "%s", (*a).buf);
+                    sim->nombre =  buf;
+                    sim->tipo_de_dato = "ID";
+                    insertar(&sim, ta);
+                    
 					fprintf(stdout, "%s\t%s\n",(*a).buf,"ID");
 					lexema((*a).buf,"ID" );
 				}
@@ -648,8 +674,9 @@ void inicia(){
 }
 
 
-int Analex(){
+int Analex( simbolo* tabla_de_simbolos){
     
+    ta = tabla_de_simbolos;
     printf("------- ANALEX -------");
 	
     char *file = "codigo.txt";
@@ -724,6 +751,9 @@ int Analex(){
 	}
     
 	fclose(fuente);
+    
+    imprimir(ta);
+    
     return 0;
 }
 

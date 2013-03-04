@@ -42,7 +42,7 @@ COND -> EXP then BLOCK .
  
 LASTSTAT -> return EXP .
  
-BINDING -> local ID  .
+BINDING -> local ID  . # Se pone tipo de dato ID a tipo local 
 BINDING -> local ID = EXP . # Se pone tipo de dato ID a tipo local 
 BINDING -> ID = EXP . 
                        

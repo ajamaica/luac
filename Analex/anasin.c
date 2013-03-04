@@ -11,20 +11,24 @@
 #include "analex.h"
 #include "Stack.h"
 #include "List.h"
+#include "tablasim.h"
 
 FILE * fp;
 Elemento ** stack;
 
 int numero;
 char letra;
-
+simbolo * tabla_de_simbolos;
 
 
 int main (int argc, const char * argv[]) {
     
     stack = malloc(sizeof(Elemento*));
+    tabla_de_simbolos = (simbolo *) malloc(sizeof(simbolo));
+
     
-    Analex();
+    tabla_de_simbolos = Analex(tabla_de_simbolos);
+    
 	
     printf("------- ANASIN -------\n");
     
@@ -37,15 +41,19 @@ int main (int argc, const char * argv[]) {
     size_t len = 100;
     size_t read;
     
-    struct test_struct *ptr = NULL;
+    
     
     print_list();
     
+    
     while ((read = getline(&line, &len, fp)) != -1) {
-     
-     add_to_list(line,true);
+        
+        add_to_list(line,true);
      
     }
+    
+    
+    
     
     
     /*
