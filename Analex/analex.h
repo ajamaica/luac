@@ -218,7 +218,7 @@ int puntuacion(worker *a , char c){
 	if (commentariossi == 1 || stringsi == 1) {(*a).estado = -1;}
     switch((*a).estado){
         case 0:
-            if( c == '.' || c== ',' || c== ':'){
+            if( c == '.' || c== ',' || c== ':' || c == ';' ){
                 sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				(*a).estado=1;
                 return 0;
@@ -232,8 +232,8 @@ int puntuacion(worker *a , char c){
             if(((int)c)>=48 && ((int)c)<=57){
                 return 0;
             }else{
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Puntuación");
-                lexema((*a).buf,"Puntuación" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,(*a).buf);
+                lexema((*a).buf,(*a).buf );
 				return 1;
             }
             return 0;
