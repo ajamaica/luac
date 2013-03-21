@@ -56,10 +56,6 @@ int agregaHijo(NodoArbol **arbol, int tipo, char* valor){
     printf("Aumente el numero de hijos\n");
 }
 
-void printArbol(NodoArbol **arbol){
-    printSubArbol(arbol, 0);
-}
-
 void printSubArbol(NodoArbol **arbol, int nivel){
     for(int i = 0; i< nivel; i++){
         printf("-");
@@ -70,3 +66,7 @@ void printSubArbol(NodoArbol **arbol, int nivel){
         printSubArbol(&(*arbol)->hijos[i], nivel);
     }
 }
+void printArbol(NodoArbol **arbol){
+    printSubArbol(arbol, 0);
+}
+
