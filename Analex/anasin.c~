@@ -258,7 +258,6 @@ int Anasin(){
         top(stack,&numero,&letra);
         char *loqueleodelafila = get_second();
         printStack(stack);
-        printf("%s\n", loqueleodelafila);
         printf("%s, %d\n", loqueleodelafila, index_of(loqueleodelafila));
         printf("Aqui no llego\n");
         matriz[numero][index_of(loqueleodelafila)]();
