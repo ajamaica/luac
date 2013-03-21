@@ -9,8 +9,8 @@
 #ifndef Analizador_Lexico_anasin_h
 #define Analizador_Lexico_anasin_h
 
-#define TERMINALESYNOTERMINALES 38
-#define ESTADOS 47
+#define TERMINALESYNOTERMINALES 34
+#define ESTADOS 53
 
 
 

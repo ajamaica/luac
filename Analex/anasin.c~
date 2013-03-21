@@ -23,7 +23,7 @@ simbolo * tabla_de_simbolos;
 
 int main (int argc, const char * argv[]) {
     
-    stack = malloc(sizeof(Elemento*));
+    stack = malloc(sizeof(Elemento*))1;
     tabla_de_simbolos = (simbolo *) malloc(sizeof(simbolo));
 
     
