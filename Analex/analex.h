@@ -457,8 +457,8 @@ int conjuntos(worker *a , char c) {
 		case 0:
 			if ((c == '(') || (c == ')') || (c == '{') || (c == '}')) {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Agrupador");
-				lexema((*a).buf,"Agrupador" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,(*a).buf);
+				lexema((*a).buf,(*a).buf );
 				return 1;
 			}
 			return 0;

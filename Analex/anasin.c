@@ -154,6 +154,34 @@ int r(){
     printStack(stack);
     NodoArbol ** nuevoArbol;
     NodoArbol ** arbolDePila;
+    
+    //int direccion;
+    //char basura;
+    
+    switch(tipo_de_reduccion){
+            /*case 0: //CHUNK -> BLOCK
+             creaHoja(nuevoArbol, 1, "CHUNK");
+             pop(nodosHuerfanos,&direccion,&basura);
+             agregaHojaExistente(nuevoArbol, direccion);
+             break;
+             case 9: //  T -> F
+             creaHoja(nuevoArbol, 1, "T");
+             printArbol(nuevoArbol);
+             popT(nodosHuerfanos,arbolDePila);
+             agregaHijoExistente(nuevoArbol, arbolDePila);
+             pushT(nodosHuerfanos,*nuevoArbol);
+             
+             break;
+             
+        case 11:
+            creaHoja(nuevoArbol, 0, "F");
+            printArbol(nuevoArbol);
+            pushT(nodosHuerfanos,*nuevoArbol);
+            break;
+             */
+    }
+    
+    
      
     return 0;
 }
