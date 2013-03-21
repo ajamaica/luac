@@ -190,12 +190,12 @@ int numeros(worker *a , char c) {
                 char buff[100];
                 sprintf(buff, "%s", (*a).buf);
                 sim->nombre =  buf;
-                sim->tipo_de_dato = "Numero Natural";
+                sim->tipo_de_dato = "numer";
                 insertar(&sim, ta);
                 
                 
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Natural");
-                lexema((*a).buf,"Numero Natural" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"numer");
+                lexema((*a).buf,"numer" );
 				return 1;
 			} else {
 				(*a).estado = -1;
@@ -286,16 +286,16 @@ int asignacion(worker *a, char c){
 		case 1:
 			if(c == '='){
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Asignacion");
-				lexema((*a).buf,"Asignacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"=");
+				lexema((*a).buf,"=" );
 				return 1;
 			}
 			(*a).estado = -1;
 			return 0;
 			break;
 		case 2:
-			fprintf(stdout, "%s\t%s\n",(*a).buf,"Asignacion");
-			lexema((*a).buf,"Asignacion" );
+			fprintf(stdout, "%s\t%s\n",(*a).buf,"=");
+			lexema((*a).buf,"=" );
 			return 1;
 			break;
 		case 3:
@@ -390,11 +390,11 @@ int ids(worker *a , char c) {
                     char buff[100];
                     sprintf(buff, "%s", (*a).buf);
                     sim->nombre =  buf;
-                    sim->tipo_de_dato = "ID";
+                    sim->tipo_de_dato = "id";
                     insertar(&sim, ta);
                     
-					fprintf(stdout, "%s\t%s\n",(*a).buf,"ID");
-					lexema((*a).buf,"ID" );
+					fprintf(stdout, "%s\t%s\n",(*a).buf,"id");
+					lexema((*a).buf,"id" );
 				}
 				return 1;
 			}
@@ -476,8 +476,8 @@ int operadores_matematicos(worker *a , char c) {
 			return 0;
 		case 1:
 			if ((isdigit(c) || c == ' ' || isalpha(c)) && commentariossi == 0) {
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Artimetico");
-				lexema((*a).buf,"Aritmetico" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
 				return 1;
 			}
 			return 0;
