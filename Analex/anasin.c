@@ -64,7 +64,6 @@ int main (int argc, const char * argv[]) {
     
     
     
-    print_list();
     
     
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -219,7 +218,7 @@ int Anasin(){
     
     
     //char* leido = get_first();
-    print_list();
+    //print_list();
     
     push(stack,0,index_of("$\n"));
     
