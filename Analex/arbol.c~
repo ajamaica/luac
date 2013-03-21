@@ -64,6 +64,7 @@ void printSubArbol(NodoArbol **arbol, int nivel){
     for(int i = 0; i<((*arbol)->numHijos); i++){
         printSubArbol(&(*arbol)->hijos[i], nivel);
     }
+    printf("Termine de imprimir el arboldentro\n");
 }
 void printArbol(NodoArbol **arbol){
     printSubArbol(arbol, 0);

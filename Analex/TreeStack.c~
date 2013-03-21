@@ -50,6 +50,7 @@ void printRecT(ElementoT * elem){
 	if(elem->next){
 		printRecT(elem->next);
 	}
+	printf("%d - arbol\n");
 	printArbol(&(elem->arbol));
 }
 
