@@ -1,23 +1,2 @@
-[==[
-    function uniqueid_some_event (e)
-     if (e:HasString("ignore string1")) then
-       a - 4
-       -- do something
-     end
-     if (e:HasString("ignore string2")) then
-      -- do something
-     end
-    end
-    some invalid closing comment tags: ]==] ]====]
-]===]
+local id = true ;
 
-function uniqueid_some_event (e)
- if (e:HasString("string1")) then
-   -- do something
- end
- if (e:HasString("string2")) then
-  -- do something
- end
-end
-
-if (e:HasString("outside function...")) then end
