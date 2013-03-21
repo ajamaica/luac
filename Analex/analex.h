@@ -135,12 +135,14 @@ int reales(worker *a , char c) {
 				return 0;
 			} else {
                 
-                simbolo *sim = (simbolo *) malloc(sizeof(simbolo));
-                char buff[100];
+                simbolo *sim = (simbolo *) malloc(sizeof(simbolo *));
+                char * buff = (char *) malloc(sizeof(char*));
                 sprintf(buff, "%s", (*a).buf);
-                sim->nombre =  buf;
-                sim->tipo_de_dato = "Numero Real";
-                insertar(&sim, ta);
+                sim->nombre = (char *) malloc(sizeof(char*));
+                strcpy(sim->nombre, buff);
+                sim->tipo_de_dato = (char *) malloc(sizeof(char*));
+                strcpy(sim->tipo_de_dato, "Numero Real");
+                insertar(&ta,sim);
                 
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Real");
 				lexema((*a).buf,"Numero Real" );
@@ -186,12 +188,14 @@ int numeros(worker *a , char c) {
 				return 0;
 			} else if (c != '.'){
                 
-                simbolo *sim = (simbolo *) malloc(sizeof(simbolo));
-                char buff[100];
+                simbolo *sim = (simbolo *) malloc(sizeof(simbolo *));
+                char * buff = (char *) malloc(sizeof(char*));
                 sprintf(buff, "%s", (*a).buf);
-                sim->nombre =  buf;
-                sim->tipo_de_dato = "numer";
-                insertar(&sim, ta);
+                sim->nombre = (char *) malloc(sizeof(char*));
+                strcpy(sim->nombre, buff);
+                sim->tipo_de_dato = (char *) malloc(sizeof(char*));
+                strcpy(sim->tipo_de_dato, "numer");
+                insertar(&ta,sim);
                 
                 
 				fprintf(stdout, "%s\t%s\n",(*a).buf,"numer");
@@ -386,12 +390,15 @@ int ids(worker *a , char c) {
 					lexema((*a).buf,"Tipo de Dato" );
 				} else {
                     
-                    simbolo *sim = (simbolo *) malloc(sizeof(simbolo));
-                    char buff[100];
+                    simbolo *sim = (simbolo *) malloc(sizeof(simbolo *));
+                    char * buff = (char *) malloc(sizeof(char*));
                     sprintf(buff, "%s", (*a).buf);
-                    sim->nombre =  buf;
-                    sim->tipo_de_dato = "id";
-                    insertar(&sim, ta);
+                    
+                    sim->nombre = (char *) malloc(sizeof(char*));
+                    strcpy(sim->nombre, buff);
+                    sim->tipo_de_dato = (char *) malloc(sizeof(char*));
+                    strcpy(sim->tipo_de_dato, "id");
+                    insertar(&ta,sim);
                     
 					fprintf(stdout, "%s\t%s\n",(*a).buf,"id");
 					lexema((*a).buf,"id" );

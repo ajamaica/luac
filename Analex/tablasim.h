@@ -23,27 +23,15 @@ simbolo * crear()
     return NULL;
 };
 
-void insertar(p_t,s)
-simbolo **p_t;
-simbolo * s;
+void insertar(simbolo **p_t,simbolo *s)
 {
     s->sig = (*p_t);
     (*p_t) = s;
 };
 
 
-simbolo * buscar(t,nombre)
-simbolo * t;
-char nombre[20];
-{
-    while ( (t != NULL) && (strcmp(nombre, t->nombre)) )
-        t = t->sig;
-        return (t);
-};
 
-
-void imprimir(t)
-simbolo * t;
+void imprimir(simbolo *t)
 {
     printf("Nombre | Tipo de Dato | Valor | Alcance\n");
     while (t != NULL)
