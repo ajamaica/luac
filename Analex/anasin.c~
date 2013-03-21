@@ -12,6 +12,7 @@
 #include "Stack.h"
 #include "List.h"
 #include "tablasim.h"
+#include "arbol.c"
 
 FILE * fp;
 Elemento ** stack;
@@ -22,6 +23,25 @@ simbolo * tabla_de_simbolos;
 
 
 int main (int argc, const char * argv[]) {
+    
+    NodoArbol** arbol;
+    creaHoja(arbol, 1, "Hola");
+    printArbol(arbol);
+    agregaHijo(arbol, 1, "Hoja1");
+    printArbol(arbol);
+    agregaHijo(arbol, 1, "Hoja2");
+    printArbol(arbol);
+    agregaHijo(arbol, 1, "Hoja3");
+    printArbol(arbol);
+    agregaHijo(arbol, 1, "Hoja4");
+    printArbol(arbol);
+    agregaHijo(arbol, 1, "Hoja5");
+    printArbol(arbol);
+    agregaHijo(&(*arbol)->hijos[1], 1, "Hoja1");
+    printArbol(arbol);
+    agregaHijo(&(*arbol)->hijos[1], 1, "Hoja2");
+    printArbol(arbol);
+
     
     stack = malloc(sizeof(Elemento*));
     tabla_de_simbolos = (simbolo *) malloc(sizeof(simbolo));
