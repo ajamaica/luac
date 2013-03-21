@@ -48,7 +48,7 @@ simbolo * t;
     printf("Nombre | Tipo de Dato | Valor | Alcance\n");
     while (t != NULL)
     {
-        printf("%c %s %i %i\n", t->nombre,t->tipo_de_dato,t->valor,t->alcance);
+        printf("%s %s %i %i\n", t->nombre,t->tipo_de_dato,t->valor,t->alcance);
         t = t->sig;
     }
 };

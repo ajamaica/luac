@@ -159,7 +159,7 @@ char* get_second(void)
     
     if(NULL == head)
     {
-        return NULL;
+        return "$\n";
     }
     
     return head->next->val;
