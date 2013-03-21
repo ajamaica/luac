@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		810D026C16FAEB1300B3D91C /* arbol.c in Sources */ = {isa = PBXBuildFile; fileRef = 810D026A16FAEB1300B3D91C /* arbol.c */; };
+		810D026F16FAEBAA00B3D91C /* TreeStack.c in Sources */ = {isa = PBXBuildFile; fileRef = 810D026D16FAEBAA00B3D91C /* TreeStack.c */; };
 		814AF57016E45CA200A7F476 /* tablasim.c in Sources */ = {isa = PBXBuildFile; fileRef = 814AF56F16E45CA100A7F476 /* tablasim.c */; };
 		D062748216D17B7E0064C3B6 /* anasin.c in Sources */ = {isa = PBXBuildFile; fileRef = D062748116D17B7E0064C3B6 /* anasin.c */; };
 		D06274CC16D196C40064C3B6 /* Stack.c in Sources */ = {isa = PBXBuildFile; fileRef = D06274CA16D196C30064C3B6 /* Stack.c */; };
@@ -27,6 +29,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		810D026A16FAEB1300B3D91C /* arbol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = arbol.c; sourceTree = "<group>"; };
+		810D026B16FAEB1300B3D91C /* arbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arbol.h; sourceTree = "<group>"; };
+		810D026D16FAEBAA00B3D91C /* TreeStack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TreeStack.c; sourceTree = "<group>"; };
+		810D026E16FAEBAA00B3D91C /* TreeStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeStack.h; sourceTree = "<group>"; };
 		814AF56F16E45CA100A7F476 /* tablasim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tablasim.c; sourceTree = "<group>"; };
 		814AF57116E45CFA00A7F476 /* tablasim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tablasim.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* Analizador Lexico */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Analizador Lexico"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,6 +72,10 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				810D026E16FAEBAA00B3D91C /* TreeStack.h */,
+				810D026D16FAEBAA00B3D91C /* TreeStack.c */,
+				810D026B16FAEB1300B3D91C /* arbol.h */,
+				810D026A16FAEB1300B3D91C /* arbol.c */,
 				D0DDE75A16E404B4002760DC /* GramaticaFInal.txt */,
 				D0DDE75916E40492002760DC /* FINALFINAL.xls */,
 				DD9F13151416C92000BE4765 /* analex.h */,
@@ -149,6 +159,8 @@
 				D06274CC16D196C40064C3B6 /* Stack.c in Sources */,
 				D06274CE16D1B72D0064C3B6 /* List.h in Sources */,
 				814AF57016E45CA200A7F476 /* tablasim.c in Sources */,
+				810D026C16FAEB1300B3D91C /* arbol.c in Sources */,
+				810D026F16FAEBAA00B3D91C /* TreeStack.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,5 @@
 #ifndef ARBOL H
 #define ARBOL H
-#include "arbol.c";
 
 typedef struct NodoArbol{
     struct NodoArbol *hijos[5];
