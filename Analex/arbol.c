@@ -2,19 +2,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "arbol.h"
 
+
+#define TRUE 1
+#define FALSE 0
 #define HIJOS 5
+//0 = hoja, 1 = nodo
 
-typedef struct NodoArbol{
-    struct NodoArbol *hijos[5];
-    int tipo;
-    char* valor;
-    int numHijos;
-} NodoArbol;
+
 
 int creaArbol(NodoArbol **arbol){
     *arbol = 0;
-    return true;
+    return TRUE;
 }
 
 int delArbol(NodoArbol **arbol){
@@ -30,30 +30,28 @@ int delArbol(NodoArbol **arbol){
 int creaHoja(NodoArbol **arbol, int tipo, char* valor){
     NodoArbol *new = malloc(sizeof(NodoArbol));
     if(!new) return FALSE;
-    printf("-Se creo la hoja\n");
     new->tipo = tipo;
     new->valor = (char*)malloc(sizeof(char*)*20);
-    printf("--Se asigno el tipo\n");
     strcpy(new->valor, valor);
-    printf("STRCPY!!!!\n");
     new->numHijos = 0;
     for(int i = 0; i<5; i++){
         new->hijos[i] = NULL;
     }
-    printf("-Se inicializaron los hijos nulos\n");
     *arbol = new;
-    printf("-Se asigno\n");
     return TRUE;
+}
+
+int agregaHijoExistente(NodoArbol **arbol, NodoArbol **hijo){
+    (*arbol)->hijos[(*arbol)->numHijos] = (*hijo);
+    ((*arbol)->numHijos)++;
 }
 
 int agregaHijo(NodoArbol **arbol, int tipo, char* valor){
     NodoArbol *new = malloc(sizeof(NodoArbol));
     if (!creaHoja(&new, tipo, valor)) return FALSE;
-    printf("Cree hoja\n");
     (*arbol)->hijos[(*arbol)->numHijos] = new;
-    printf("Asigne el hijo en el arreglo\n");
     ((*arbol)->numHijos)++;
-    printf("Aumente el numero de hijos\n");
+
 }
 
 void printSubArbol(NodoArbol **arbol, int nivel){

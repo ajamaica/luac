@@ -10,12 +10,15 @@
 #include "anasin.h"
 #include "analex.h"
 #include "Stack.h"
+#include "TreeStack.h"
 #include "List.h"
 #include "tablasim.h"
-#include "arbol.c"
+#include "arbol.h"
+
 
 FILE * fp;
 Elemento ** stack;
+ElementoT ** nodosHuerfanos;
 
 int numero;
 char letra;
@@ -23,6 +26,8 @@ simbolo * tabla_de_simbolos;
 
 
 int main (int argc, const char * argv[]) {
+    
+    
     
     NodoArbol** arbol;
     /*
@@ -45,6 +50,7 @@ int main (int argc, const char * argv[]) {
 
     
     stack = malloc(sizeof(Elemento*));
+    nodosHuerfanos = malloc(sizeof(ElementoT*));
     tabla_de_simbolos = (simbolo *) malloc(sizeof(simbolo));
 
     
@@ -113,6 +119,7 @@ int r(){
     
     char *loqueleodelafila = get_second();
     int tipo_de_reduccion = matrizvalores[numero][index_of(loqueleodelafila)];
+    printf("Reduccion %d\n\n", tipo_de_reduccion);
     int i = 0;
     
     while (reduccciones[tipo_de_reduccion][i] != -1) {
@@ -144,11 +151,32 @@ int r(){
     
     push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j]);
     
-    /*switch(tipo_de_reduccion){
-        case 1:
+    NodoArbol ** nuevoArbol;
+    NodoArbol ** arbolDePila;
+    //int direccion;
+    //char basura;
+    
+    switch(tipo_de_reduccion){
+        /*case 0: //CHUNK -> BLOCK
+            creaHoja(nuevoArbol, 1, "CHUNK");
+            pop(nodosHuerfanos,&direccion,&basura);
+            agregaHojaExistente(nuevoArbol, direccion);
+            break;*/
+        case 9: //  T -> F
+            creaHoja(nuevoArbol, 1, "T");
+            popT(nodosHuerfanos,arbolDePila);
+            agregaHijoExistente(nuevoArbol, arbolDePila);
+            pushT(nodosHuerfanos,nuevoArbol);
             
             break;
-    }*/
+        case 11:
+            creaHoja(nuevoArbol, 0, "F");
+            pushT(nodosHuerfanos,nuevoArbol);
+            printArbol(nuevoArbol);
+            printStackT(nodosHuerfanos);
+            
+            break;
+    }
     
     return 0;
 }
@@ -184,6 +212,7 @@ int f0(){
 }
 
 int e(){
+    printf("Error! Panico!\n");
     exit(0);
     return 1;
 }
