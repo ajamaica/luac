@@ -18,7 +18,8 @@
 
 FILE * fp;
 Elemento ** stack;
-ElementoT ** nodosHuerfanos;
+StackArbol nodosHuerfanos;
+
 
 int numero;
 char letra;
@@ -50,7 +51,7 @@ int main (int argc, const char * argv[]) {
 
     
     stack = malloc(sizeof(Elemento*));
-    nodosHuerfanos = malloc(sizeof(ElementoT*));
+    initializeT(&nodosHuerfanos);
     tabla_de_simbolos = (simbolo *) malloc(sizeof(simbolo));
 
     
@@ -152,33 +153,51 @@ int r(){
     
     push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j]);
     printStack(stack);
+    //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
+    //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
     NodoArbol ** arbolDePila;
-    //int direccion;
-    //char basura;
     
     switch(tipo_de_reduccion){
-        /*case 0: //CHUNK -> BLOCK
-            creaHoja(nuevoArbol, 1, "CHUNK");
-            pop(nodosHuerfanos,&direccion,&basura);
-            agregaHojaExistente(nuevoArbol, direccion);
-            break;
-        case 9: //  T -> F
-            creaHoja(nuevoArbol, 1, "T");
-            printArbol(nuevoArbol);
-            popT(nodosHuerfanos,arbolDePila);
-            agregaHijoExistente(nuevoArbol, arbolDePila);
-            pushT(nodosHuerfanos,*nuevoArbol);
-            
-            break;
-            */
+            /*case 0: //CHUNK -> BLOCK
+             creaHoja(nuevoArbol, 1, "CHUNK");
+             pop(nodosHuerfanos,&direccion,&basura);
+             agregaHojaExistente(nuevoArbol, direccion);
+             break;*/
+         case 9: //  T -> F
+             printf("Accion semantica 9\n");
+             creaHoja(nuevoArbol, 1, "T");
+             printf("Creamos arbol con T\n");
+             printArbol(nuevoArbol);
+             printf("Pila:\n");
+             printT(&nodosHuerfanos);
+             arbolDePila = popT(&nodosHuerfanos);
+             printf("Sacamos un arbol de la pila\n");
+             printArbol(arbolDePila);
+             agregaHijoExistente(nuevoArbol, arbolDePila);
+             pushT(nuevoArbol, &nodosHuerfanos);
+             printT(&nodosHuerfanos);
+             
+             break;
+             
         case 11:
+            printf("Accion semantica 11\n");
             creaHoja(nuevoArbol, 0, "F");
+            printf("Creamos arbol con F\n");
             printArbol(nuevoArbol);
-            pushT(nodosHuerfanos,*nuevoArbol);
+            pushT(nuevoArbol, &nodosHuerfanos);
+            printf("Agregamos arbol al stack\n");
+            printf("Pila:\n");
+            printT(&nodosHuerfanos);
+            printf("Pop y Push\n");
+            printArbol(pop(&nodosHuerfanos));
+            pushT(nuevoArbol, &nodosHuerfanos);
             break;
+             
     }
     
+    
+     
     return 0;
 }
 
@@ -258,8 +277,8 @@ int Anasin(){
         top(stack,&numero,&letra);
         char *loqueleodelafila = get_second();
         printStack(stack);
+        printf("%s\n", loqueleodelafila);
         printf("%s, %d\n", loqueleodelafila, index_of(loqueleodelafila));
-        printf("Aqui no llego\n");
         matriz[numero][index_of(loqueleodelafila)]();
         //matriz[0][0]();
         

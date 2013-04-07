@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +27,7 @@ int delArbol(NodoArbol **arbol){
 }
 
 int creaHoja(NodoArbol **arbol, int tipo, char* valor){
-    NodoArbol *new = malloc(sizeof(NodoArbol));
+    NodoArbol *new = (NodoArbol *) malloc(sizeof(NodoArbol));
     if(!new) return FALSE;
     new->tipo = tipo;
     new->valor = (char*)malloc(sizeof(char*)*20);
@@ -56,6 +55,7 @@ int agregaHijo(NodoArbol **arbol, int tipo, char* valor){
 }
 
 void printSubArbol(NodoArbol **arbol, int nivel){
+    if(nivel>5) return;
     for(int i = 0; i< nivel; i++){
         printf("-");
     }
