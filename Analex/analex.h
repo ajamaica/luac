@@ -17,7 +17,7 @@ typedef struct worker {
 simbolo *ta;
 worker ar[11];
 char escritura[BUFSIZ];
-FILE *fuente;
+//FILE *fuente;
 int fdLexemas;
 int commentariossi,stringsi;
 
