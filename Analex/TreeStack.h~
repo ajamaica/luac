@@ -4,7 +4,7 @@
 #define TRUE 1
 #define FALSE 0
 
-#include "arbol.h"
+#include "arbol.c"
 	
 struct StackRec 
 {
