@@ -154,7 +154,7 @@ int r(){
     push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j]);
     printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
-    NodoArbol ** nuevoArbol;
+    NodoArbol *** nuevoArbol;
     //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
     NodoArbol ** arbolDePila;
     
@@ -166,7 +166,7 @@ int r(){
              break;*/
          case 9: //  T -> F
              printf("Accion semantica 9\n");
-             creaHoja(nuevoArbol, 1, "T");
+             creaHoja(*nuevoArbol, 1, "T");
              printf("Creamos arbol con T\n");
              printArbol(nuevoArbol);
              printf("Pila:\n");
@@ -182,7 +182,7 @@ int r(){
              
         case 11:
             printf("Accion semantica 11\n");
-            creaHoja(nuevoArbol, 0, "F");
+            creaHoja(*nuevoArbol, 0, "F");
             printf("Creamos arbol con F\n");
             printArbol(nuevoArbol);
             pushT(nuevoArbol, &nodosHuerfanos);
