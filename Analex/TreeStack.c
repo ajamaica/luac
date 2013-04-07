@@ -22,7 +22,7 @@ int emptyT(StackArbol stack)
     return stack == NULL;
 }
 
-void pushT(NodoArbol ** arbol, StackArbol *stack)
+void pushT(NodoArbol * arbol, StackArbol *stack)
 {
     StackArbol tmp = (StackArbol) malloc(sizeof(struct StackRec));
     
@@ -39,7 +39,7 @@ void pushT(NodoArbol ** arbol, StackArbol *stack)
 
 }
 
-NodoArbol** popT(StackArbol *stack)
+NodoArbol* popT(StackArbol *stack)
 {
     if(*stack == NULL)
     {
@@ -48,7 +48,7 @@ NodoArbol** popT(StackArbol *stack)
     else
     {
         StackArbol tmp = *stack;
-        NodoArbol ** arbol = (*stack)->arbol;
+        NodoArbol * arbol = (*stack)->arbol;
         *stack = (*stack)->next;
         free(tmp);
         return arbol;
@@ -66,9 +66,9 @@ void printT(StackArbol *stack)
         StackArbol tmp = *stack;
         while(!emptyT(tmp))
         {
-            NodoArbol ** arbol = tmp->arbol;
+            NodoArbol * arbol = tmp->arbol;
 
-            printArbol(arbol);     
+            printArbol(&arbol);     
             tmp = tmp->next;
         }
     }

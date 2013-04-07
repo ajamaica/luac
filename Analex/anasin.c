@@ -156,7 +156,7 @@ int r(){
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
     //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
-    NodoArbol ** arbolDePila;
+    NodoArbol * arbolDePila;
     
     switch(tipo_de_reduccion){
             /*case 0: //CHUNK -> BLOCK
@@ -166,16 +166,20 @@ int r(){
              break;*/
          case 9: //  T -> F
              printf("Accion semantica 9\n");
+             printf("+++++++\n");
+             printT(&nodosHuerfanos);
              creaHoja(nuevoArbol, 1, "T");
+             printf("+++++++\n");
+             printT(&nodosHuerfanos);
              printf("Creamos arbol con T\n");
              printArbol(nuevoArbol);
              printf("Pila:\n");
              printT(&nodosHuerfanos);
              arbolDePila = popT(&nodosHuerfanos);
              printf("Sacamos un arbol de la pila\n");
-             printArbol(arbolDePila);
-             agregaHijoExistente(nuevoArbol, arbolDePila);
-             pushT(nuevoArbol, &nodosHuerfanos);
+             printArbol(&arbolDePila);
+             agregaHijoExistente(nuevoArbol, &arbolDePila);
+             pushT(*nuevoArbol, &nodosHuerfanos);
              printT(&nodosHuerfanos);
              
              break;
@@ -185,7 +189,7 @@ int r(){
             creaHoja(nuevoArbol, 0, "F");
             printf("Creamos arbol con F\n");
             printArbol(nuevoArbol);
-            pushT(nuevoArbol, &nodosHuerfanos);
+            pushT(*nuevoArbol, &nodosHuerfanos);
             printf("Agregamos arbol al stack\n");
             printf("Pila:\n");
             printT(&nodosHuerfanos);
