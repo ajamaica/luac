@@ -67,6 +67,7 @@ void printT(StackArbol *stack)
         while(!emptyT(tmp))
         {
             NodoArbol ** arbol = tmp->arbol;
+
             printArbol(arbol);     
             tmp = tmp->next;
         }

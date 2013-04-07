@@ -189,9 +189,6 @@ int r(){
             printf("Agregamos arbol al stack\n");
             printf("Pila:\n");
             printT(&nodosHuerfanos);
-            printf("Pop y Push\n");
-            printArbol(pop(&nodosHuerfanos));
-            pushT(nuevoArbol, &nodosHuerfanos);
             break;
              
     }
