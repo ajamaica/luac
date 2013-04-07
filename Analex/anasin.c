@@ -155,6 +155,7 @@ int r(){
     printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
+    nuevoArbol = (NodoArbol**) malloc(sizeof(NodoArbol*));
     //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
     NodoArbol * arbolDePila;
     

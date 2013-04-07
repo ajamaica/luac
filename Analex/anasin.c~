@@ -155,6 +155,7 @@ int r(){
     printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
+    NodoArbol = (NodoArbol**) malloc(sizeof(NodoArbol*));
     //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
     NodoArbol * arbolDePila;
     
@@ -179,7 +180,7 @@ int r(){
              printf("Sacamos un arbol de la pila\n");
              printArbol(&arbolDePila);
              agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(&nuevoArbol, &nodosHuerfanos);
+             pushT(*nuevoArbol, &nodosHuerfanos);
              printT(&nodosHuerfanos);
              
              break;
@@ -189,7 +190,7 @@ int r(){
             creaHoja(nuevoArbol, 0, "F");
             printf("Creamos arbol con F\n");
             printArbol(nuevoArbol);
-            pushT(&nuevoArbol, &nodosHuerfanos);
+            pushT(*nuevoArbol, &nodosHuerfanos);
             printf("Agregamos arbol al stack\n");
             printf("Pila:\n");
             printT(&nodosHuerfanos);

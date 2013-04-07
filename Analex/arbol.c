@@ -31,11 +31,14 @@ int creaHoja(NodoArbol **arbol, int tipo, char* valor){
     if(!new) return FALSE;
     new->tipo = tipo;
     new->valor = (char*)malloc(sizeof(char*)*20);
+    
     strcpy(new->valor, valor);
     new->numHijos = 0;
+
     for(int i = 0; i<5; i++){
         new->hijos[i] = NULL;
     }
+
     *arbol = new;
     return TRUE;
 }
