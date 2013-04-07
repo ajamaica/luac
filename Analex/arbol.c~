@@ -39,7 +39,7 @@ int creaHoja(NodoArbol **arbol, int tipo, char* valor){
         new->hijos[i] = NULL;
     }
 
-    *arbol = *new;
+    *arbol = new;
     return TRUE;
 }
 

@@ -58,7 +58,6 @@ int agregaHijo(NodoArbol **arbol, int tipo, char* valor){
 }
 
 void printSubArbol(NodoArbol **arbol, int nivel){
-    if(nivel>5) return;
     for(int i = 0; i< nivel; i++){
         printf("-");
     }
