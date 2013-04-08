@@ -77,13 +77,15 @@ int r(){
     printStack(stack);
     int numerodestack;
     char chardestack;
+    char * valordestack;
+    char * valorsignificativo;
     
     char *simbolo = get_first();
     char *loqueleodelafila = get_second();
     int tipo_de_reduccion = matrizvalores[numero][index_of(loqueleodelafila)];
     printf("Reduccion %d\n\n", tipo_de_reduccion);
     int i = 0;
-    
+
     while (reduccciones[tipo_de_reduccion][i] != -1) {
         i++;
     }
@@ -94,25 +96,30 @@ int r(){
         
         
         
-        top(stack, &numerodestack, &chardestack);
-            
+        top(stack, &numerodestack, &chardestack, valordestack);
+        
         int numeroquerelacionaelcharconlareduccion = reduccciones[tipo_de_reduccion][j];
        
         if(chardestack == numeroquerelacionaelcharconlareduccion ){
-            pop(stack, &numerodestack, &chardestack);
+            pop(stack, &numerodestack, &chardestack, valordestack);
+            if(chardestack == 1 || (chardestack >= 6 && chardestack <= 8))
+            {
+                valorsignificativo = (char*)malloc(sizeof(valordestack));
+                strcpy(valorsignificativo, valordestack);
+            } 
         }else{
             printf("Error en Reduccion %d", tipo_de_reduccion);
             exit(0);
         }
     }
     
-    top(stack, &numerodestack, &chardestack);
+    top(stack, &numerodestack, &chardestack, valordestack);
     
     int loquevoyameter = matrizvalores[numerodestack][reduccciones[tipo_de_reduccion][j]];
 
     
     
-    push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j]);
+    push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j], valordestack);
     printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
@@ -189,13 +196,13 @@ int r(){
              pushT(*nuevoArbol, &nodosHuerfanos);
              break;
          case 7: //EXP -> EXP binop T ++++++
-             printf("Accion semantica 5\n");
+             printf("Accion semantica 7\n");
              creaHoja(nuevoArbol, 1, "EXP");
              arbolDePila = popT(&nodosHuerfanos);
              agregaHijoExistente(nuevoArbol, &arbolDePila);
              hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
              creaHoja(hojaAux, 0, "binop");
-             printf("Simbolo: %s\n",simbolo);
+             printf("Simbolo: %s\n",valorsignificativo);
              agregaHijoExistente(nuevoArbol, hojaAux);
              arbolDePila = popT(&nodosHuerfanos);
              agregaHijoExistente(nuevoArbol, &arbolDePila);
@@ -438,11 +445,11 @@ int r(){
 int d(){
     
     
-    pop_first();
+    char *valor = pop_first();
     char *rgreso = pop_first();
     printf("Desplazamiento %d\n",matrizvalores[numero][index_of(rgreso)]);
     if(rgreso != NULL){
-        push(stack, matrizvalores[numero][index_of(rgreso)], index_of(rgreso));
+        push(stack, matrizvalores[numero][index_of(rgreso)], index_of(rgreso), valor);
         return 0;
     }
     exit(0);
@@ -454,7 +461,7 @@ int i(){
     char *rgreso = get_second();
     if(rgreso != NULL){
         printf("%s",rgreso);
-        push(stack,matrizvalores[numero][letra],index_of(rgreso));
+        push(stack,matrizvalores[numero][letra],index_of(rgreso), valordestack);
         printf("%i , %i \n",numero, letra);
         return 0;
     }
@@ -504,11 +511,11 @@ int Anasin(){
     //char* leido = get_first();
     //print_list();
     
-    push(stack,0,index_of("$\n"));
+    push(stack,0,index_of("$\n"), valordestack);
     
     
     while(1){
-        top(stack,&numero,&letra);
+        top(stack,&numero,&letra, valordestack);
         char *loqueleodelafila = get_second();
         printStack(stack);
         printf("%s\n", loqueleodelafila);

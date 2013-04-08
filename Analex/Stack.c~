@@ -13,43 +13,37 @@ int delStack(Elemento **stack){
 	Elemento *next = 0;
 	while(*stack){
 		next = (*stack)->next;
-		free((*stack)->valor);
 		free(*stack);
 		*stack = next;
 	}
 	return TRUE;
 }
 
-int push(Elemento **stack, int numero, char letra, char * valor){
+int push(Elemento **stack, int numero, char letra){
 	Elemento *new = malloc(sizeof(Elemento));
 	if(!new) return FALSE;
 	new->numero = numero;
 	new->letra = letra;
 	new->next = *stack;
-	new->valor = (char**)malloc(sizeof(valor));
-	strcpy(new->valor, valor);
 	*stack = new;
 	return TRUE;
 }
 
-int pop(Elemento **stack, int * numero, char * letra, char * valor){
+int pop(Elemento **stack, int * numero, char * letra){
 	Elemento *elemento;
 	if(!(elemento=*stack)) return FALSE;
 	*numero = elemento->numero;
 	*letra = elemento->letra;
 	*stack = elemento->next;
-	strcpy(valor, elemento->valor);
-	free(elemento->valor);
 	free(elemento);
 	return TRUE;
 }
 
-int top(Elemento **stack, int * numero, char * letra, char * valor){
+int top(Elemento **stack, int * numero, char * letra){
 	Elemento *elemento;
 	if(!(elemento=*stack)) return FALSE;
 	*numero = elemento->numero;
 	*letra = elemento->letra;
-	strcpy(valor, elemento->valor);
 	return TRUE;
 }
 

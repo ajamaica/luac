@@ -14,7 +14,7 @@ typedef struct Elemento{
 int creaStack(Elemento **);
 int delStack(Elemento **);
 int push(Elemento **,int,char, char *);
-int pop(Elemento **,int *,char *, char *);
-int top(Elemento **,int *,char *, char *);
+int pop(Elemento **,int *,char *, char **);
+int top(Elemento **,int *,char *, char **);
 
 #endif
