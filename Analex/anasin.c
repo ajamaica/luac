@@ -35,11 +35,11 @@ int main (int argc, const char * argv[]) {
     
     stack = malloc(sizeof(Elemento*));
     initializeT(&nodosHuerfanos);
-    tabla_de_simbolos = (simbolo *) malloc(sizeof(simbolo));
+    simbolo tabla_de_simbolos;// = (simbolo *) malloc(sizeof(simbolo));
     
     
-    tabla_de_simbolos = Analex(tabla_de_simbolos);
-    
+    tabla_de_simbolos = Analex();
+    imprimir(&tabla_de_simbolos);
 	
     printf("------- ANASIN -------\n");
     
@@ -206,7 +206,6 @@ int r(){
             arbolDePila = popT(&nodosHuerfanos);
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
-            
             
             break;
         case 8: //  EXP -> T

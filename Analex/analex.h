@@ -680,9 +680,9 @@ void inicia(){
 }
 
 
-int Analex( simbolo* tabla_de_simbolos){
+simbolo Analex(){
     
-    ta = tabla_de_simbolos;
+    ta = (simbolo *) malloc(sizeof(simbolo));
     printf("------- ANALEX -------");
 	
     char *file = "codigo.txt";
@@ -691,12 +691,12 @@ int Analex( simbolo* tabla_de_simbolos){
     
 	if((fuente=fopen(file,"r")) == NULL){
 		fprintf(stderr, "Error: %s",file);
-		return 1;
+		return *ta;
 	}
     
     if ((fdLexemas=open("lexemas.txt",O_WRONLY | O_CREAT | O_TRUNC,0666)) < 0) {
 		fprintf(stderr, "Error al crear archivo lexemas.txt");
-		return 1;
+		return *ta;
 	}
 	
     inicia();
@@ -759,7 +759,7 @@ int Analex( simbolo* tabla_de_simbolos){
 	fclose(fuente);
     
     imprimir(ta);
-    
-    return 0;
+    return *ta;
+
 }
 
