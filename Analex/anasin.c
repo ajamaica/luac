@@ -23,7 +23,7 @@ StackArbol nodosHuerfanos;
 
 int numero;
 char letra;
-simbolo * tabla_de_simbolos;
+simbolo tabla_de_simbolos;
 
 
 int main (int argc, const char * argv[]) {
@@ -35,7 +35,6 @@ int main (int argc, const char * argv[]) {
     
     stack = malloc(sizeof(Elemento*));
     initializeT(&nodosHuerfanos);
-    simbolo tabla_de_simbolos;// = (simbolo *) malloc(sizeof(simbolo));
     
     
     tabla_de_simbolos = Analex();
@@ -111,9 +110,7 @@ int r(){
             exit(0);
         }
     }
-    printf("loqueleodelafila %s\n\n", loqueleodelafila);
     top(stack, &numerodestack, &chardestack, valordestack);
-    printf("loqueleodelafila %s\n\n", loqueleodelafila);
     int loquevoyameter = matrizvalores[numerodestack][reduccciones[tipo_de_reduccion][j]];
     
     
