@@ -26,7 +26,7 @@ int push(Elemento **stack, int numero, char letra, char * valor){
 	new->numero = numero;
 	new->letra = letra;
 	new->next = *stack;
-	new->valor = (char**)malloc(sizeof(valor));
+	new->valor = (char*)malloc(sizeof(char)*strlen(valor));
 	strcpy(new->valor, valor);
 	*stack = new;
 	return TRUE;
@@ -44,12 +44,12 @@ int pop(Elemento **stack, int * numero, char * letra, char * valor){
 	return TRUE;
 }
 
-int top(Elemento **stack, int * numero, char * letra, char * valor){
+int top(Elemento **stack, int * numero, char * letra, char * valorr){
 	Elemento *elemento;
 	if(!(elemento=*stack)) return FALSE;
 	*numero = elemento->numero;
 	*letra = elemento->letra;
-	strcpy(valor, elemento->valor);
+	strcpy(valorr, elemento->valor);
 	return TRUE;
 }
 

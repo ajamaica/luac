@@ -77,10 +77,9 @@ int r(){
     printStack(stack);
     int numerodestack;
     char chardestack;
-    char * valordestack;
+    char * valordestack = (char*)malloc(sizeof(char)*100);
     char * valorsignificativo;
     
-    char *simbolo = get_first();
     char *loqueleodelafila = get_second();
     int tipo_de_reduccion = matrizvalores[numero][index_of(loqueleodelafila)];
     printf("Reduccion %d\n\n", tipo_de_reduccion);
@@ -112,14 +111,14 @@ int r(){
             exit(0);
         }
     }
-    
+    printf("loqueleodelafila %s\n\n", loqueleodelafila);
     top(stack, &numerodestack, &chardestack, valordestack);
-    
+    printf("loqueleodelafila %s\n\n", loqueleodelafila);
     int loquevoyameter = matrizvalores[numerodestack][reduccciones[tipo_de_reduccion][j]];
 
     
     
-    push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j], valordestack);
+    push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j], "");
     printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
@@ -487,30 +486,13 @@ int Anasin(){
     
     
     
-    char * valordestack;
+    char * valordestack = (char*)malloc(sizeof(char)*100);
     fp = fopen("lexemas.txt", "r");
     if (fp == NULL)
         exit(EXIT_FAILURE);
     
-    /*
-    while ((read = getline(&line, &len, fp)) != -1) {
-        
-        printf("%s", line);
-        
-    }
-     */
-    
-    /* Creamos METEMOS $ y 1)*/
-    
-    
     creaStack(stack);
 	
-    
-   
-    
-    
-    //char* leido = get_first();
-    //print_list();
     
     push(stack,0,index_of("$\n"), valordestack);
     
@@ -520,7 +502,7 @@ int Anasin(){
         char *loqueleodelafila = get_second();
         printStack(stack);
         printf("%s\n", loqueleodelafila);
-        printf("%s, %d\n", loqueleodelafila, index_of(loqueleodelafila));
+        printf("matriz[%s, %d]\n", loqueleodelafila, index_of(loqueleodelafila));
         matriz[numero][index_of(loqueleodelafila)]();
         //matriz[0][0]();
         
