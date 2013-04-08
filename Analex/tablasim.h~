@@ -36,7 +36,9 @@ void imprimir(simbolo *t)
     printf("Nombre | Tipo de Dato | Valor | Alcance\n");
     while (t != NULL)
     {
+        printf("---\n");
         printf("%s %s %i %i\n", t->nombre,t->tipo_de_dato,t->valor,t->alcance);
+                printf("---\n");
         t = t->sig;
 
     }

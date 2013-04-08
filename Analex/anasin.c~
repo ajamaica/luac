@@ -31,15 +31,15 @@ int main (int argc, const char * argv[]) {
     
     
     NodoArbol** arbol;
-
+    
     
     stack = malloc(sizeof(Elemento*));
     initializeT(&nodosHuerfanos);
-    tabla_de_simbolos = (simbolo *) malloc(sizeof(simbolo));
-
+    simbolo tabla_de_simbolos;// = (simbolo *) malloc(sizeof(simbolo));
     
-    tabla_de_simbolos = Analex(tabla_de_simbolos);
     
+    tabla_de_simbolos = Analex();
+    imprimir(&tabla_de_simbolos);
 	
     printf("------- ANASIN -------\n");
     
@@ -55,37 +55,37 @@ int main (int argc, const char * argv[]) {
     
     
     
-    
     while ((read = getline(&line, &len, fp)) != -1) {
         
         add_to_list(line,true);
-     
+        
     }
- 
+    
     
     Anasin();
-    
+        imprimir(&tabla_de_simbolos);
 }
 
 int ok(){
     
     printf("LO LOGRAMOS!!!!! MERECEMOS UNA CERVEZA.");
+    imprimir(&tabla_de_simbolos);
     exit(0);
 }
 
 int r(){
     printStack(stack);
+    simbolo * amodificar;
     int numerodestack;
     char chardestack;
-    char * valordestack;
+    char * valordestack = (char*)malloc(sizeof(char)*100);
     char * valorsignificativo;
     
-    char *simbolo = get_first();
     char *loqueleodelafila = get_second();
     int tipo_de_reduccion = matrizvalores[numero][index_of(loqueleodelafila)];
     printf("Reduccion %d\n\n", tipo_de_reduccion);
     int i = 0;
-
+    
     while (reduccciones[tipo_de_reduccion][i] != -1) {
         i++;
     }
@@ -99,27 +99,27 @@ int r(){
         top(stack, &numerodestack, &chardestack, valordestack);
         
         int numeroquerelacionaelcharconlareduccion = reduccciones[tipo_de_reduccion][j];
-       
+        
         if(chardestack == numeroquerelacionaelcharconlareduccion ){
             pop(stack, &numerodestack, &chardestack, valordestack);
             if(chardestack == 1 || (chardestack >= 6 && chardestack <= 8))
             {
                 valorsignificativo = (char*)malloc(sizeof(valordestack));
                 strcpy(valorsignificativo, valordestack);
-            } 
+            }
         }else{
             printf("Error en Reduccion %d", tipo_de_reduccion);
             exit(0);
         }
     }
-    
+    printf("loqueleodelafila %s\n\n", loqueleodelafila);
     top(stack, &numerodestack, &chardestack, valordestack);
-    
+    printf("loqueleodelafila %s\n\n", loqueleodelafila);
     int loquevoyameter = matrizvalores[numerodestack][reduccciones[tipo_de_reduccion][j]];
-
     
     
-    push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j], valordestack);
+    
+    push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j], "");
     printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
@@ -130,99 +130,100 @@ int r(){
     NodoArbol * arbolDePila;
     
     switch(tipo_de_reduccion){
-         case 0: //CHUNK -> BLOCK
-             creaHoja(nuevoArbol, 1, "CHUNK");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 1: //BLOCK -> SCOPE STATLIST
-             printf("Accion semantica 5\n");
-             creaHoja(nuevoArbol, 1, "BLOCK");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 2: //BLOCK -> SCOPE STATLIST LASTSTAT SEMI
-             printf("Accion semantica 2\n");
-             creaHoja(nuevoArbol, 1, "SCOPE");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 3: //SEMI -> ;
-             printf("Accion semantica 3\n");
-             creaHoja(nuevoArbol, 1, "SEMI");
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, ";");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 4: //SEMI -> epsilon
-             printf("Accion semantica 4\n");
-             creaHoja(nuevoArbol, 1, "SEMI");
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "epsilon");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 5: //BLOCK -> SCOPE STATLIST BINDING SEMI
-             printf("Accion semantica 5\n");
-             creaHoja(nuevoArbol, 1, "SCOPE");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 6: //SCOPE -> epsilon
-             printf("Accion semantica 6\n");
-             creaHoja(nuevoArbol, 1, "SCOPE");
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "epsilon");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 7: //EXP -> EXP binop T ++++++
-             printf("Accion semantica 7\n");
-             creaHoja(nuevoArbol, 1, "EXP");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "binop");
-             printf("Simbolo: %s\n",valorsignificativo);
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 8: //  EXP -> T
-             printf("Accion semantica 8");
-             creaHoja(nuevoArbol, 1, "EXP");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
-         case 9: //  T -> F
-             printf("Accion semantica 9\n");
-             creaHoja(nuevoArbol, 1, "T");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-
-             break;  
+        case 0: //CHUNK -> BLOCK
+            creaHoja(nuevoArbol, 1, "CHUNK");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 1: //BLOCK -> SCOPE STATLIST
+            printf("Accion semantica 5\n");
+            creaHoja(nuevoArbol, 1, "BLOCK");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 2: //BLOCK -> SCOPE STATLIST LASTSTAT SEMI
+            printf("Accion semantica 2\n");
+            creaHoja(nuevoArbol, 1, "SCOPE");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 3: //SEMI -> ;
+            printf("Accion semantica 3\n");
+            creaHoja(nuevoArbol, 1, "SEMI");
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, ";");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 4: //SEMI -> epsilon
+            printf("Accion semantica 4\n");
+            creaHoja(nuevoArbol, 1, "SEMI");
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "epsilon");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 5: //BLOCK -> SCOPE STATLIST BINDING SEMI
+            printf("Accion semantica 5\n");
+            creaHoja(nuevoArbol, 1, "SCOPE");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 6: //SCOPE -> epsilon
+            printf("Accion semantica 6\n");
+            creaHoja(nuevoArbol, 1, "SCOPE");
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "epsilon");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 7: //EXP -> EXP binop T ++++++
+            printf("Accion semantica 7\n");
+            creaHoja(nuevoArbol, 1, "EXP");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "binop");
+            printf("Simbolo: %s\n",valorsignificativo);
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
+        case 8: //  EXP -> T
+            printf("Accion semantica 8");
+            creaHoja(nuevoArbol, 1, "EXP");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
+        case 9: //  T -> F
+            printf("Accion semantica 9\n");
+            creaHoja(nuevoArbol, 1, "T");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
         case 10: // F -> ( EXP )
             printf("Accion semantica 10\n");
             creaHoja(nuevoArbol, 0, "F");
@@ -235,7 +236,7 @@ int r(){
             creaHoja(hojaAux, 0, ")");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
-            break;     
+            break;
         case 11: // F -> True +++++
             printf("Accion semantica 11\n");
             creaHoja(nuevoArbol, 0, "F");
@@ -277,121 +278,121 @@ int r(){
             pushT(*nuevoArbol, &nodosHuerfanos);
             break;
         case 16: // STATLIST -> STATLIST STAT SEMI
-             printf("Accion semantica 16\n");
-             creaHoja(nuevoArbol, 1, "SCOPE");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
+            printf("Accion semantica 16\n");
+            creaHoja(nuevoArbol, 1, "SCOPE");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
         case 17: // STATLIST -> epsilon
-             printf("Accion semantica 6\n");
-             creaHoja(nuevoArbol, 1, "STATLIST");
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "epsilon");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
+            printf("Accion semantica 6\n");
+            creaHoja(nuevoArbol, 1, "STATLIST");
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "epsilon");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
         case 18: // STAT -> while EXP do BLOCK end
-             printf("Accion semantica 18\n");
-             creaHoja(nuevoArbol, 1, "STAT");
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "while");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "do");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "end");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
+            printf("Accion semantica 18\n");
+            creaHoja(nuevoArbol, 1, "STAT");
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "while");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "do");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "end");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
         case 19: // STAT -> if CONDS end
-             printf("Accion semantica 19\n");
-             creaHoja(nuevoArbol, 1, "STAT");
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "if");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "end");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-             break;
+            printf("Accion semantica 19\n");
+            creaHoja(nuevoArbol, 1, "STAT");
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "if");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "end");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            break;
         case 20: // CONDS -> CONDLIST
             printf("Accion semantica 20\n");
-             creaHoja(nuevoArbol, 1, "CONDS");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-
-             break;  
+            creaHoja(nuevoArbol, 1, "CONDS");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
         case 21: // CONDS -> CONDLIST else BLOCK
             printf("Accion semantica 21\n");
-             creaHoja(nuevoArbol, 1, "CONDS");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "else");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-
-             break; 
+            creaHoja(nuevoArbol, 1, "CONDS");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "else");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
         case 22: // CONDLIST -> COND
             printf("Accion semantica 22\n");
-             creaHoja(nuevoArbol, 1, "CONDLIST");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-
-             break;  
+            creaHoja(nuevoArbol, 1, "CONDLIST");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
         case 23: // CONDLIST -> CONDLIST elseif COND
             printf("Accion semantica 23\n");
-             creaHoja(nuevoArbol, 1, "CONDLIST");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "elseif");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-
-             break; 
+            creaHoja(nuevoArbol, 1, "CONDLIST");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "elseif");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
         case 24: // COND -> EXP then BLOCK
             printf("Accion semantica 24\n");
-             creaHoja(nuevoArbol, 1, "COND");
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "then");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-
-             break; 
+            creaHoja(nuevoArbol, 1, "COND");
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "then");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
         case 25: // LASTSTAT -> return EXP
             printf("Accion semantica 25\n");
-             creaHoja(nuevoArbol, 1, "LASTSTAT");
-             hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
-             creaHoja(hojaAux, 0, "return");
-             agregaHijoExistente(nuevoArbol, hojaAux);
-             arbolDePila = popT(&nodosHuerfanos);
-             agregaHijoExistente(nuevoArbol, &arbolDePila);
-             pushT(*nuevoArbol, &nodosHuerfanos);
-
-             break; 
+            creaHoja(nuevoArbol, 1, "LASTSTAT");
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "return");
+            agregaHijoExistente(nuevoArbol, hojaAux);
+            arbolDePila = popT(&nodosHuerfanos);
+            agregaHijoExistente(nuevoArbol, &arbolDePila);
+            pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            break;
         case 26: // BINDING -> local id
             printf("Accion semantica 26\n");
             creaHoja(nuevoArbol, 1, "BINDING");
@@ -402,6 +403,9 @@ int r(){
             creaHoja(hojaAux, 0, "id");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            //amodificar = search(valorsignificativo, &tabla_de_simbolos);
+            //amodificar->alcance = 1;
+            //imprimir(&tabla_de_simbolos);
             break;
         case 27: // BINDING -> local id = EXP
             printf("Accion semantica 27\n");
@@ -418,6 +422,9 @@ int r(){
             arbolDePila = popT(&nodosHuerfanos);
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            //amodificar = search(valorsignificativo, &tabla_de_simbolos);
+            //amodificar->alcance = 1;
+            //imprimir(&tabla_de_simbolos);
             break;
         case 28: // BINDING -> id = EXP
             printf("Accion semantica 28\n");
@@ -433,12 +440,12 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             break;
-             
+            
     }
     printT(&nodosHuerfanos);
     
     
-     
+    
     return 0;
 }
 
@@ -458,6 +465,7 @@ int d(){
 
 int i(){
     //pop_first();
+    char * valordestack;
     char *rgreso = get_second();
     if(rgreso != NULL){
         printf("%s",rgreso);
@@ -486,30 +494,13 @@ int Anasin(){
     
     
     
-    
+    char * valordestack = (char*)malloc(sizeof(char)*100);
     fp = fopen("lexemas.txt", "r");
     if (fp == NULL)
         exit(EXIT_FAILURE);
     
-    /*
-    while ((read = getline(&line, &len, fp)) != -1) {
-        
-        printf("%s", line);
-        
-    }
-     */
-    
-    /* Creamos METEMOS $ y 1)*/
-    
-    
     creaStack(stack);
 	
-    
-   
-    
-    
-    //char* leido = get_first();
-    //print_list();
     
     push(stack,0,index_of("$\n"), valordestack);
     
@@ -518,14 +509,14 @@ int Anasin(){
         top(stack,&numero,&letra, valordestack);
         char *loqueleodelafila = get_second();
         printStack(stack);
-        printf("%s\n", loqueleodelafila);
-        printf("%s, %d\n", loqueleodelafila, index_of(loqueleodelafila));
+        //printf("%s\n", loqueleodelafila);
+        //printf("matriz[%s, %d]\n", loqueleodelafila, index_of(loqueleodelafila));
         matriz[numero][index_of(loqueleodelafila)]();
         //matriz[0][0]();
         
         
     }
-        
+    
     
     fclose(fp);
     return 0;
@@ -543,12 +534,12 @@ char leerAnalex(){
     getline(&lexema, &len, fp);
     
     //QUE HACER CON LO QUE LEA
-
+    
     getline(&tipo, &len, fp);
     
     
     int dondeesta = index_of(tipo);
-  
+    
     return (char *) dondeesta;
 }
 

@@ -55,7 +55,6 @@ int main (int argc, const char * argv[]) {
     
     
     
-    
     while ((read = getline(&line, &len, fp)) != -1) {
         
         add_to_list(line,true);
@@ -64,17 +63,18 @@ int main (int argc, const char * argv[]) {
     
     
     Anasin();
-    
 }
 
 int ok(){
     
     printf("LO LOGRAMOS!!!!! MERECEMOS UNA CERVEZA.");
+    imprimir(&tabla_de_simbolos);
     exit(0);
 }
 
 int r(){
     printStack(stack);
+    simbolo * amodificar;
     int numerodestack;
     char chardestack;
     char * valordestack = (char*)malloc(sizeof(char)*100);
@@ -402,6 +402,9 @@ int r(){
             creaHoja(hojaAux, 0, "id");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            //amodificar = search(valorsignificativo, &tabla_de_simbolos);
+            //amodificar->alcance = 1;
+            //imprimir(&tabla_de_simbolos);
             break;
         case 27: // BINDING -> local id = EXP
             printf("Accion semantica 27\n");
@@ -418,6 +421,9 @@ int r(){
             arbolDePila = popT(&nodosHuerfanos);
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            //amodificar = search(valorsignificativo, &tabla_de_simbolos);
+            //amodificar->alcance = 1;
+            //imprimir(&tabla_de_simbolos);
             break;
         case 28: // BINDING -> id = EXP
             printf("Accion semantica 28\n");
