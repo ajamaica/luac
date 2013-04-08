@@ -44,14 +44,24 @@ void imprimir(simbolo *t)
 
 simbolo* search(char * nombre, simbolo *t){
     simbolo * aux = (simbolo *) malloc(sizeof(simbolo));
-    while (t != NULL && strcmp(t->nombre, nombre))
+    while (t->sig != NULL)
     {
+       
+        printf("%s", t->nombre);
+        printf("%s",nombre);
+  
+        char buffer [50];
+        
+        sprintf (buffer, "%s\n", t->nombre);
+        
+        if(strcmp(buffer, nombre) == 0){
+            printf("%s",nombre);
+            return t;
+        }
+        
         t = t->sig;
     }
-    if(t != NULL && !strcmp(t->nombre, nombre))
-    {
-        aux = t;
-    }
+  
     return aux;
 }
 

@@ -418,8 +418,8 @@ int r(){
             arbolDePila = popT(&nodosHuerfanos);
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
-            //amodificar = search(valorsignificativo, &tabla_de_simbolos);
-            //amodificar->alcance = 1;
+            amodificar = search(valorsignificativo, &tabla_de_simbolos);
+            amodificar->alcance = 1;
             //imprimir(&tabla_de_simbolos);
             break;
         case 28: // BINDING -> id = EXP
