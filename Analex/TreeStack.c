@@ -73,6 +73,26 @@ void printT(StackArbol *stack)
         }
     }
 }
+
+void printT2(StackArbol *stack)
+{
+    if(*stack == NULL)
+    {
+        printf("Underflow de memoria en el stack\n");
+    }
+    else
+    {
+        StackArbol tmp = *stack;
+        while(!emptyT(tmp))
+        {
+            NodoArbol * arbol = tmp->arbol;
+            
+            printArbol2(&arbol);
+            tmp = tmp->next;
+        }
+    }
+}
+
 /*
 int creaStackT(ElementoT **stack){
 	*stack = 0;

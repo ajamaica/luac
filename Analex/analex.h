@@ -580,8 +580,8 @@ int comparacion(worker *a , char c) {
 		case 1:
 			if (c == '=') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
-				lexema((*a).buf,"Comparacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
 				return 1;
 			}
 			(*a).estado = -1;
@@ -590,12 +590,12 @@ int comparacion(worker *a , char c) {
 		case 2:
 			if (c == '=') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
-				lexema((*a).buf,"Comparacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
 				return 1;
 			} else {
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
-				lexema((*a).buf,"Comparacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
 				return 1;
 			}
 			return 0;

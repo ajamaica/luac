@@ -15,4 +15,8 @@ int agregaHijoExistente(NodoArbol **, NodoArbol **);
 int agregaHijo(NodoArbol **, int , char* );
 void printSubArbol(NodoArbol **, int );
 void printArbol(NodoArbol **);
+
+void printSubArbol2(NodoArbol **, int );
+void printArbol2(NodoArbol **);
+
 #endif

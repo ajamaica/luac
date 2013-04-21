@@ -67,7 +67,24 @@ void printSubArbol(NodoArbol **arbol, int nivel){
         printSubArbol(&(*arbol)->hijos[i], nivel);
     }
 }
+
+void printSubArbol2(NodoArbol **arbol, int nivel){
+    for(int i = 0; i< nivel; i++){
+        printf(",");
+    }
+    printf("%s", (*arbol)->valor);
+    nivel++;
+    
+    for(int i = 0; i<((*arbol)->numHijos); i++){
+        printSubArbol2(&(*arbol)->hijos[i], nivel);
+    }
+}
+
 void printArbol(NodoArbol **arbol){
     printSubArbol(arbol, 0);
+}
+
+void printArbol2(NodoArbol **arbol){
+    printSubArbol2(arbol, 0);
 }
 
