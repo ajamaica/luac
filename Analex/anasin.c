@@ -20,6 +20,7 @@ FILE * fp;
 Elemento ** stack;
 StackArbol nodosHuerfanos;
 
+StackArbol ASTstack;
 
 int numero;
 char letra;
@@ -35,6 +36,7 @@ int main (int argc, const char * argv[]) {
     
     stack = malloc(sizeof(Elemento*));
     initializeT(&nodosHuerfanos);
+    initializeT(&ASTstack);
     
     
     tabla_de_simbolos = Analex();
@@ -120,7 +122,9 @@ int r(){
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
     NodoArbol ** hojaAux;
+    NodoArbol ** ASTArbol;
     nuevoArbol = (NodoArbol**) malloc(sizeof(NodoArbol*));
+    ASTArbol = (NodoArbol**) malloc(sizeof(NodoArbol*));
     
     //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
     NodoArbol * arbolDePila;
@@ -204,6 +208,23 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
+            
+            creaHoja(ASTArbol, 1, valorsignificativo);
+            
+            // Lado Izquierdo
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol, &arbolDePila);
+            
+             // Lado Derecho
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol, &arbolDePila);
+
+            
+            pushT(*ASTArbol, &ASTstack);
+            printf("ArbolAST\n");
+            printT2(&ASTstack);
+
+            
             break;
         case 8: //  EXP -> T
             printf("Accion semantica 8");
@@ -256,6 +277,11 @@ int r(){
             creaHoja(hojaAux, 0, "numer");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            creaHoja(ASTArbol, 0, valorsignificativo);
+            pushT(*ASTArbol, &ASTstack);
+            printT(&ASTstack);
+            
             break;
         case 14: // F -> string +++++
             printf("Accion semantica 14\n");
@@ -399,8 +425,8 @@ int r(){
             creaHoja(hojaAux, 0, "id");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
-            //amodificar = search(valorsignificativo, &tabla_de_simbolos);
-            //amodificar->alcance = 1;
+            amodificar = search(valorsignificativo, &tabla_de_simbolos);
+            amodificar->alcance = 1;
             //imprimir(&tabla_de_simbolos);
             break;
         case 27: // BINDING -> local id = EXP
