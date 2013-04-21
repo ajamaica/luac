@@ -68,7 +68,7 @@ int main (int argc, const char * argv[]) {
 
 int ok(){
     
-    printf("LO LOGRAMOS!!!!! MERECEMOS UNA CERVEZA.");
+    printf("LO LOGRAMOS!!!!! MERECEMOS UNA CERVEZA.\n");
     imprimir(&tabla_de_simbolos);
     exit(0);
 }
@@ -449,6 +449,7 @@ int r(){
             pushT(*nuevoArbol, &nodosHuerfanos);
             amodificar = search(valorsignificativo, &tabla_de_simbolos);
             amodificar->alcance = 1;
+	    //amodificar->valor = 0;
             //imprimir(&tabla_de_simbolos);
             break;
         case 28: // BINDING -> id = EXP
