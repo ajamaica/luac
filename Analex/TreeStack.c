@@ -55,6 +55,20 @@ NodoArbol* popT(StackArbol *stack)
     }
 }
 
+NodoArbol* topT(StackArbol *stack)
+{
+    if(*stack == NULL)
+    {
+        printf("Underflow de memoria en el stack\n");
+    }
+    else
+    {
+        StackArbol tmp = *stack;
+        NodoArbol * arbol = (*stack)->arbol;
+        return arbol;
+    }
+}
+
 void printT(StackArbol *stack)
 {
     if(*stack == NULL)

@@ -19,6 +19,7 @@ void initializeT(StackArbol *);
 int emptyT(StackArbol);
 void pushT(NodoArbol * , StackArbol *);
 NodoArbol* popT(StackArbol *);
+NodoArbol* topT(StackArbol *);
 void printT(StackArbol *);
 void printT2(StackArbol *);
 #endif

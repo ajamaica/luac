@@ -1,6 +1,5 @@
 #ifndef ARBOL_H
 #define ARBOL_H
-include "arbol.c"
 
 typedef struct NodoArbol{
     struct NodoArbol *hijos[5];
@@ -16,4 +15,8 @@ int agregaHijoExistente(NodoArbol **, NodoArbol **);
 int agregaHijo(NodoArbol **, int , char* );
 void printSubArbol(NodoArbol **, int );
 void printArbol(NodoArbol **);
+
+void printSubArbol2(NodoArbol **, int );
+void printArbol2(NodoArbol **);
+
 #endif

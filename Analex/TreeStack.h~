@@ -8,7 +8,7 @@
 	
 struct StackRec 
 {
-    NodoArbol ** arbol;
+    NodoArbol * arbol;
     struct StackRec *next;
 };
 
@@ -17,8 +17,8 @@ typedef struct StackRec *StackArbol;
 
 void initializeT(StackArbol *);
 int emptyT(StackArbol);
-void pushT(NodoArbol ** , StackArbol *);
-NodoArbol** popT(StackArbol *);
+void pushT(NodoArbol * , StackArbol *);
+NodoArbol* popT(StackArbol *);
 void printT(StackArbol *);
-
+void printT2(StackArbol *);
 #endif

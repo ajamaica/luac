@@ -2,7 +2,7 @@
 #define ARBOL_H
 
 typedef struct NodoArbol{
-    struct NodoArbol *hijos[5];
+    struct NodoArbol *hijos[10];
     int tipo;
     char* valor;
     int numHijos;

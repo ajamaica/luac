@@ -135,6 +135,9 @@ int r(){
             arbolDePila = popT(&nodosHuerfanos);
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            
+            
             break;
         case 1: //BLOCK -> SCOPE STATLIST
             printf("Accion semantica 5\n");
