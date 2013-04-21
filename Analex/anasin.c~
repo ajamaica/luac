@@ -128,6 +128,7 @@ int r(){
     
     //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
     NodoArbol * arbolDePila;
+
     
     switch(tipo_de_reduccion){
         case 0: //CHUNK -> BLOCK
@@ -167,6 +168,17 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
+            
+            creaHoja(ASTArbol,1,"BLOCK");
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            pushT(*ASTArbol,&ASTstack);
             //Me lo salto por sanidad mental
             
             break;
@@ -177,6 +189,9 @@ int r(){
             creaHoja(hojaAux, 0, ";");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            creaHoja(ASTArbol,0,";");
+            pushT(*ASTArbol,&ASTstack);
             break;
         case 4: //SEMI -> epsilon
             printf("Accion semantica 4\n");
@@ -414,11 +429,24 @@ int r(){
             creaHoja(ASTArbol,1,"if");
             arbolDePila = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
             pushT(*ASTArbol, &ASTstack);
+            
+            
+            NodoArbol * arbolDePilaAux;
+            NodoArbol * aux2;
+            arbolDePila = popT(&ASTstack);
+            arbolDePilaAux = aux2 = popT(&ASTstack);
+            while(!strcmp(aux2->valor,"if")&&aux2->numHijos==3)
+            {
+                printf("=================================================\n\n\n\n%s\n\n\n\n",aux2->valor);
+                aux2 = aux2->hijos[(aux2->numHijos)-1];
+            }
+            printf("Termino el ciclo\n");
+            //aux2 = aux2->hijos[0];
+            agregaHijoExistente(&aux2,&arbolDePila);
+            printf("1\n");
+            pushT(arbolDePilaAux,&ASTstack);
+            printf("2\n");
             break;
         case 20: // CONDS -> CONDLIST
             printf("Accion semantica 20\n");
@@ -440,12 +468,13 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
-            creaHoja(ASTArbol,1,"else");
+            
+           
+           
             arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
+            *ASTArbol = popT(&ASTstack);
             pushT(*ASTArbol, &ASTstack);
+            pushT(arbolDePila, &ASTstack);
             
             break;
         case 22: // CONDLIST -> COND
@@ -468,10 +497,9 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
-            creaHoja(ASTArbol,1,"elseif");
+            //creaHoja(ASTArbol,1,"elseif");
             arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
+            *ASTArbol = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
             pushT(*ASTArbol, &ASTstack);
             
@@ -488,7 +516,7 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
-            creaHoja(ASTArbol,1,"then");
+            creaHoja(ASTArbol,1,"if");
             arbolDePila = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
             arbolDePila = popT(&ASTstack);
@@ -538,8 +566,9 @@ int r(){
             pushT(*nuevoArbol, &nodosHuerfanos);
             
             creaHoja(ASTArbol,1,"=");
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, valorsignificativo);
+            agregaHijoExistente(ASTArbol, hojaAux);
             arbolDePila = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
             pushT(*ASTArbol, &ASTstack);
@@ -564,17 +593,18 @@ int r(){
             pushT(*nuevoArbol, &nodosHuerfanos);
             
             creaHoja(ASTArbol,1,"=");
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, valorsignificativo);
+            agregaHijoExistente(ASTArbol, hojaAux);
             arbolDePila = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
             pushT(*ASTArbol, &ASTstack);
             break;
             
     }
-    printf("============================================================================\n ARBOL SINTACTICO \n===========================================================================\n");
+     /*printf("============================================================================\n ARBOL SINTACTICO \n===========================================================================\n");
     printT(&nodosHuerfanos);
-    
+    */
     printf("============================================================================\n ARBOL AST \n===========================================================================\n");
     printT(&ASTstack);
     //printT2(&ASTstack);

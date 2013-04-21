@@ -1,7 +1,8 @@
-if true then
-    i = 0
-elseif true then
-    i = 0
+if c1 then
+    a = 0
+elseif c2 then
+    b = 0
 else
-    i = 0
+    c = 0
 end
+
