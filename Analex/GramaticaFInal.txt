@@ -13,18 +13,15 @@ SEMI-> .
 SCOPE -> SCOPE STATLIST BINDING SEMI .
 SCOPE ->  .
  
-EXP -> EXP binop EXP2 .
-EXP ->  true .
-EXP ->  false .
-EXP -> numer .
-EXP -> string .
-EXP -> PREFIXEXP .
-               
-EXP2 -> true .
-EXP2 -> false .
-EXP2 -> numer .
-EXP2 -> string .
-               
+EXP -> EXP binop T .
+EXP -> T .
+T -> F .
+F -> (EXP) .
+F -> true .
+F -> false .
+F -> numer .
+F -> string .
+F -> id .
  
 STATLIST -> STATLIST STAT SEMI .
 STATLIST -> .
@@ -45,6 +42,3 @@ LASTSTAT -> return EXP .
 BINDING -> local ID  . # Se pone tipo de dato ID a tipo local 
 BINDING -> local ID = EXP . # Se pone tipo de dato ID a tipo local 
 BINDING -> ID = EXP . 
-                       
-PREFIXEXP -> ID .
-PREFIXEXP -> ( EXP ) .

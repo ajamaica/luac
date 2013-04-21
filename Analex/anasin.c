@@ -170,7 +170,7 @@ int r(){
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
             break;
-        case 5: //BLOCK -> SCOPE STATLIST BINDING SEMI
+        case 5: //SCOPE -> SCOPE STATLIST BINDING SEMI
             printf("Accion semantica 5\n");
             creaHoja(nuevoArbol, 1, "SCOPE");
             arbolDePila = popT(&nodosHuerfanos);
