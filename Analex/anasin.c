@@ -69,6 +69,25 @@ int main (int argc, const char * argv[]) {
     
 }
 
+char *ltrim(char *s)
+{
+    while(isspace(*s)) s++;
+    return s;
+}
+
+char *rtrim(char *s)
+{
+    char* back = s + strlen(s);
+    while(isspace(*--back));
+    *(back+1) = '\0';
+    return s;
+}
+
+char *trim(char *s)
+{
+    return rtrim(ltrim(s)); 
+}
+
 
 
 
@@ -122,7 +141,7 @@ char* generaCuadruples(NodoArbol* AST)
     
     if(!strcmp(AST->valor,""))
     {
-        for(i = 0; i<(AST->numHijos);i++)
+        for(i = AST->numHijos-1; i>=0;i--)
         {
             strcat(cuadruples,generaCuadruples(AST->hijos[i]));
         }
@@ -130,33 +149,52 @@ char* generaCuadruples(NodoArbol* AST)
     else if(!strcmp(AST->valor,">"))
     {
         idxBool++;
-        sprintf("%s\n(LTx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
+        sprintf(cuadruples,"%s\n(LTx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
     }
-    else if(!strcmp(AST->valor,"<"))
+    else if(!strcmp(AST->valor,"<\n"))
     {
         idxBool++;
-        sprintf("%s\n(LTx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[1]),generaCuadruples(AST->hijos[0]));
+        sprintf(cuadruples,"%s\n(LTx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[1]),generaCuadruples(AST->hijos[0]));
     }
     else if(!strcmp(AST->valor,"=="))
     {
         idxBool++;
-        sprintf("%s\n(EQx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
+        sprintf(cuadruples,"%s\n(EQx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
     }
-    else if(!strcmp(AST->valor,"+"))
+    else if(!strcmp(AST->valor,"+\n"))
     {
         idxTerm++;
-        sprintf("%s\n(ADDx,T%d,%s,%s)",cuadruples,idxTerm,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
+        sprintf(cuadruples,"%s\n(ADDx,T%d,%s,%s)",cuadruples,idxTerm,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
+    }
+    else if(!strcmp(AST->valor,"*\n"))
+    {
+        idxTerm++;
+        sprintf(cuadruples,"%s\n(MULx,T%d,%s,%s)",cuadruples,idxTerm,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
     }
     else if(!strcmp(AST->valor,"="))
     {
-        idxTerm++;
-        sprintf("%s\n(MOV,T%d,%s,)",cuadruples,idxTerm,generaCuadruples(AST->hijos[0]));
+        sprintf(cuadruples,"%s\n%s\n(MOV,%s",cuadruples,generaCuadruples(AST->hijos[1]),generaCuadruples(AST->hijos[0]));
+        sprintf(cuadruples,"%s,T%d,)",cuadruples, idxTerm);
+    }
+    else if(!strcmp(AST->valor,"while"))
+    {
+        idxRef++;
+        sprintf(cuadruples,"%s\n(E%d,,,)",cuadruples,idxRef);
+        idxRef++;
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[1]));
+        sprintf(cuadruples,"%s\n(BRT,B%d,,E%d)",cuadruples,idxBool, idxRef);
+        idxRef++;
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)\n(E%d,,,)",cuadruples,idxRef,(idxRef-1));
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[0]));
+        //TODO: Revisar que idxRef-3 sea correcto
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)\n(E%d,,,)",cuadruples,idxRef-2,idxRef);
     }
     else
     {
-        printf("Hasta aqui llega con %s %d\n",AST->valor,sizeof(*cuadruples));
-        strcpy(cuadruples,AST->valor);
+        printf("Simbolo desconocido: %s\n",AST->valor);
+        strcpy(cuadruples,trim(AST->valor));
     }
+
     return cuadruples;
     
 }

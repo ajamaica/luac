@@ -1,2 +1,4 @@
-id = 1 + 1
-
+id = 1
+while ( id < 10 ) do
+    id = id + 1
+end
