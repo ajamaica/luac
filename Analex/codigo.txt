@@ -1,8 +1,2 @@
-if c1 then
-    a = 0
-elseif c2 then
-    b = 0
-else
-    c = 0
-end
+id = 1 + 1
 

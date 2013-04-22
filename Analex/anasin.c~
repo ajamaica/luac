@@ -26,9 +26,11 @@ int numero;
 char letra;
 simbolo tabla_de_simbolos;
 
-
+int idxBool;
+int idxTerm;
+int idxRef;
 int main (int argc, const char * argv[]) {
-    
+    idxBool = idxTerm = idxRef = 0;
     
     
     NodoArbol** arbol;
@@ -112,11 +114,64 @@ NodoArbol* limpiaAST(NodoArbol *arbol){
     
 }
 
+char* generaCuadruples(NodoArbol* AST)
+{
+    char * cuadruples = (char*)malloc(sizeof(*AST)*30);
+    strcpy(cuadruples,"");
+    int i;
+    
+    if(!strcmp(AST->valor,""))
+    {
+        for(i = 0; i<(AST->numHijos);i++)
+        {
+            strcat(cuadruples,generaCuadruples(AST->hijos[i]));
+        }
+    }
+    else if(!strcmp(AST->valor,">"))
+    {
+        idxBool++;
+        sprintf("%s\n(LTx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
+    }
+    else if(!strcmp(AST->valor,"<"))
+    {
+        idxBool++;
+        sprintf("%s\n(LTx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[1]),generaCuadruples(AST->hijos[0]));
+    }
+    else if(!strcmp(AST->valor,"=="))
+    {
+        idxBool++;
+        sprintf("%s\n(EQx,B%d,%s,%s)",cuadruples,idxBool,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
+    }
+    else if(!strcmp(AST->valor,"+"))
+    {
+        idxTerm++;
+        sprintf("%s\n(ADDx,T%d,%s,%s)",cuadruples,idxTerm,generaCuadruples(AST->hijos[0]),generaCuadruples(AST->hijos[1]));
+    }
+    else if(!strcmp(AST->valor,"="))
+    {
+        idxTerm++;
+        sprintf("%s\n(MOV,T%d,%s,)",cuadruples,idxTerm,generaCuadruples(AST->hijos[0]));
+    }
+    else
+    {
+        printf("Hasta aqui llega con %s %d\n",AST->valor,sizeof(cuadruples));
+        strcpy(cuadruples,AST->valor);
+    }
+    return cuadruples;
+    
+}
+
 void postSin(){
-    NodoArbol *arbolDePila;
-    arbolDePila = popT(&ASTstack);
-    arbolDePila = limpiaAST(arbolDePila);
-    printArbol(arbolDePila);
+    
+    NodoArbol *AST;
+    AST = popT(&ASTstack);
+    AST = limpiaAST(AST);
+    printArbol(AST);
+    
+
+    
+    printf(generaCuadruples(AST));
+
 }
 
 
