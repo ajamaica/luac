@@ -64,12 +64,69 @@ int main (int argc, const char * argv[]) {
     
     
     Anasin();
+    
 }
+
+
+
+
+
+
+
+NodoArbol* limpiaAST(NodoArbol *arbol){
+    NodoArbol *nuevo;
+    NodoArbol *aux;
+    if(arbol->numHijos==0)
+    {
+        if(!strcmp(arbol->valor,"epsilon") || !strcmp(arbol->valor,""))
+           {
+               return NULL;
+           }
+           else
+           {
+               return arbol;
+           }
+    }
+    else
+    {
+        nuevo = (NodoArbol*)malloc(sizeof(NodoArbol));
+        if(!strcmp(arbol->valor,"BLOCK")||!strcmp(arbol->valor, "STATLIST"))
+        {
+            creaHoja(&nuevo, 1, "");
+        }
+        else
+        {
+            creaHoja(&nuevo,arbol->tipo,arbol->valor);
+        }
+        for(int i = 0; i<arbol->numHijos;i++)
+        {
+            aux = limpiaAST(arbol->hijos[i]);
+            if (aux!=NULL)
+            {
+                agregaHijoExistente(&nuevo,&aux);
+            }
+        }
+        return nuevo;
+    }
+    
+    
+}
+
+void postSin(){
+    NodoArbol *arbolDePila;
+    arbolDePila = popT(&ASTstack);
+    arbolDePila = limpiaAST(arbolDePila);
+    printArbol(arbolDePila);
+}
+
+
+
 
 int ok(){
     
-    printf("LO LOGRAMOS!!!!! MERECEMOS UNA CERVEZA.");
+    printf("LO LOGRAMOS!!!!! MERECEMOS UNA CERVEZA.\n");
     imprimir(&tabla_de_simbolos);
+    postSin();
     exit(0);
 }
 
@@ -425,11 +482,7 @@ int r(){
             creaHoja(hojaAux, 0, "");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
-            //CHECAR
-            creaHoja(ASTArbol,1,"if");
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            pushT(*ASTArbol, &ASTstack);
+            
             
             
             NodoArbol * arbolDePilaAux;
@@ -716,3 +769,5 @@ int index_of(char *string){
     }
     return -1;
 }
+
+
