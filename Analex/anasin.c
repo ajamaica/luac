@@ -113,10 +113,11 @@ NodoArbol* limpiaAST(NodoArbol *arbol){
 }
 
 void postSin(){
-    NodoArbol *arbolDePila;
-    arbolDePila = popT(&ASTstack);
-    arbolDePila = limpiaAST(arbolDePila);
-    printArbol(arbolDePila);
+    NodoArbol *AST;
+    AST = popT(&ASTstack);
+    AST = limpiaAST(AST);
+    printArbol(AST);
+    
 }
 
 
