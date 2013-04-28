@@ -1,5 +1,9 @@
 id = 1 + 1 * 2 - 3
-while ( true ) do
+while ( id < 10 ) do
+    i = 0;
+    while ( i < 5 ) do
+        i = i + 1
+    end
     id = id + 1
 end
 

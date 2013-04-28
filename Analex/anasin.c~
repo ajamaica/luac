@@ -157,7 +157,7 @@ char* generaCuadruples(NodoArbol* AST)
             strcat(cuadruples,generaCuadruples(AST->hijos[i]));
         }
     }
-    else if(!strcmp(AST->valor,">"))
+    else if(!strcmp(AST->valor,">\n"))
     {
     
         sprintf(
@@ -172,7 +172,7 @@ char* generaCuadruples(NodoArbol* AST)
         sprintf(cuadruples,"%s\n(LTx,B%d,%s",cuadruples,idxBool,trim(valorTemp));
         pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
         sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
-        sprintf(valorTemp,"B%d",idx);
+        sprintf(valorTemp,"B%d",idxBool);
         push(stackCuadruples,0,(char)0,valorTemp);
         
     }
@@ -193,7 +193,7 @@ char* generaCuadruples(NodoArbol* AST)
         sprintf(valorTemp,"B%d",idxBool);
         push(stackCuadruples,0,(char)0,valorTemp);
     }
-    else if(!strcmp(AST->valor,"=="))
+    else if(!strcmp(AST->valor,"==\n"))
     {
         sprintf(
             cuadruples,
@@ -300,16 +300,78 @@ char* generaCuadruples(NodoArbol* AST)
     }
     else if(!strcmp(AST->valor,"while"))
     {
+        char endLbl[10];
+        //Genero etiqueta de condicion
         idxRef++;
         sprintf(cuadruples,"%s\n(E%d,,,)",cuadruples,idxRef);
-        idxRef++;
+        //Introduzco la etiqueta en la pila
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+
+        //Genero los cuadruples de la condicion
         sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[1]));
-        sprintf(cuadruples,"%s\n(BRT,B%d,,E%d)",cuadruples,idxBool, idxRef);
+        //Saco el booleano de la condicion
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(BRT,%s",cuadruples,valorTemp);
+        //Genero la etiqueta de accion y termino el salto condicional
         idxRef++;
-        sprintf(cuadruples,"%s\n(JUMP,E%d,,)\n(E%d,,,)",cuadruples,idxRef,(idxRef-1));
+
+        sprintf(cuadruples,"%s,,E%d)",cuadruples,idxRef);
+        //Genero el salto de terminacion
+        idxRef++;
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)",cuadruples,idxRef);
+        //Introduzco la etiqueta de terminacion al stack
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+        //Imprimo la etiqueta de accion
+        sprintf(cuadruples,"%s\n(E%d,,,)",cuadruples,idxRef-1);
+        //Genero los cuadruples de accion
         sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[0]));
-        //TODO: Revisar que idxRef-3 sea correcto
-        sprintf(cuadruples,"%s\n(JUMP,E%d,,)\n(E%d,,,)",cuadruples,idxRef-2,idxRef);
+        //Extraigo la etiqueta de terminacion
+        pop(stackCuadruples,&intBasura,&charBasura,endLbl);
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        //imprimo el salto de condicion y la etiqueta de terminacion
+        sprintf(cuadruples,"%s\n(JUMP,%s,,)\n(%s,,,)",cuadruples,valorTemp,endLbl);
+    }
+    else if(!strcmp(AST->valor,"if"))
+    {
+        printf("if\n\n\n\n");
+        //Genero los cuadruples de la condicion
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[1]));
+        
+        //Saco el booleano de la condicion
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(BRT,%s",cuadruples,valorTemp);
+        //Genero la etiqueta de true y termino el salto condicional
+        idxRef++;
+        sprintf(cuadruples,"%s,,E%d)",cuadruples,idxRef);
+        //Imprimo el salto de false
+        idxRef++;
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)",cuadruples,idxRef);
+        //Imprimo la etiqueta de true
+        sprintf(cuadruples,"%s,\n(E%d,,,)",cuadruples,idxRef-1);
+        //Introduzco la etiqueta de false
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+        //Genero los cuadruples de true
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[0]));
+        //Imprimo el salto de fin
+        idxRef++;
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)",cuadruples,idxRef);
+
+        //Extraigo e imprimo la etiqueta de false
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(%s,,,)",cuadruples,valorTemp);
+
+        //Introduzco la etiqueta de fin
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+        //Genero los cuadruples de false
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[2]));
+                        
+        //Extraigo e imprimo la etiqueta de fin
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,(%s,,,)",cuadruples,valorTemp);
     }
     else
     {
