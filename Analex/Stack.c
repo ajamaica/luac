@@ -66,3 +66,17 @@ void printStack(Elemento ** stack){
 	printRec(*stack);
 	printf("\n");
 }
+
+void printValor(Elemento * elem){
+	if(!elem) return;
+	if(elem->next){
+		printValor(elem->next);
+	}
+	printf("<%s>",elem->valor);
+}
+
+void printStackValues(Elemento ** stack){
+	if(!stack) return;
+	printValor(*stack);
+	printf("\n");
+}

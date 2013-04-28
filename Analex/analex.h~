@@ -17,7 +17,6 @@ typedef struct worker {
 simbolo *ta;
 worker ar[11];
 char escritura[BUFSIZ];
-FILE *fuente;
 int fdLexemas;
 int commentariossi,stringsi;
 
@@ -581,8 +580,8 @@ int comparacion(worker *a , char c) {
 		case 1:
 			if (c == '=') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
-				lexema((*a).buf,"Comparacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
 				return 1;
 			}
 			(*a).estado = -1;
@@ -591,12 +590,12 @@ int comparacion(worker *a , char c) {
 		case 2:
 			if (c == '=') {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
-				lexema((*a).buf,"Comparacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
 				return 1;
 			} else {
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Comparacion");
-				lexema((*a).buf,"Comparacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
 				return 1;
 			}
 			return 0;
@@ -681,9 +680,9 @@ void inicia(){
 }
 
 
-int Analex( simbolo* tabla_de_simbolos){
+simbolo Analex(){
     
-    ta = tabla_de_simbolos;
+    ta = (simbolo *) malloc(sizeof(simbolo));
     printf("------- ANALEX -------");
 	
     char *file = "codigo.txt";
@@ -692,12 +691,12 @@ int Analex( simbolo* tabla_de_simbolos){
     
 	if((fuente=fopen(file,"r")) == NULL){
 		fprintf(stderr, "Error: %s",file);
-		return 1;
+		return *ta;
 	}
     
     if ((fdLexemas=open("lexemas.txt",O_WRONLY | O_CREAT | O_TRUNC,0666)) < 0) {
 		fprintf(stderr, "Error al crear archivo lexemas.txt");
-		return 1;
+		return *ta;
 	}
 	
     inicia();
@@ -760,7 +759,7 @@ int Analex( simbolo* tabla_de_simbolos){
 	fclose(fuente);
     
     imprimir(ta);
-    
-    return 0;
+    return *ta;
+
 }
 

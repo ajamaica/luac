@@ -315,8 +315,8 @@ int asignacion(worker *a, char c){
             
             
             if ((isdigit(c) || c == ' ' || isalpha(c)) && commentariossi == 0) {
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Aritmetico");
-				lexema((*a).buf,"Asignacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
                 (*a).estado = -1;
 				return 1;
 			}
