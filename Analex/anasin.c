@@ -375,8 +375,12 @@ char* generaCuadruples(NodoArbol* AST)
     }
     else
     {
-        printf("Hoja del AST, agregamos: %s\n",AST->valor);
-        push(stackCuadruples,0,(char)0,AST->valor);
+        // Truncamos valor
+        char *token;
+        char *search = ".";
+        token = strtok(AST->valor, search);
+        printf("Hoja del AST, agregamos: %s\n",token);
+        push(stackCuadruples,0,(char)0,token);
     }
 
     return cuadruples;

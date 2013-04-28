@@ -133,18 +133,18 @@ int reales(worker *a , char c) {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				return 0;
 			} else {
-                
+                // Numero Real
                 simbolo *sim = (simbolo *) malloc(sizeof(simbolo *));
                 char * buff = (char *) malloc(sizeof(char*));
                 sprintf(buff, "%s", (*a).buf);
                 sim->nombre = (char *) malloc(sizeof(char*));
                 strcpy(sim->nombre, buff);
                 sim->tipo_de_dato = (char *) malloc(sizeof(char*));
-                strcpy(sim->tipo_de_dato, "Numero Real");
+                strcpy(sim->tipo_de_dato, "numer");
                 insertar(&ta,sim);
                 
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Real");
-				lexema((*a).buf,"Numero Real" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"numer");
+				lexema((*a).buf,"numer" );
 				return 1;
 			}
 			break;
