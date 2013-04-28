@@ -290,8 +290,8 @@ char* generaCuadruples(NodoArbol* AST)
             cuadruples,
             "%s\n%s\n%s",
             cuadruples,
-            generaCuadruples(AST->hijos[0]),
-            generaCuadruples(AST->hijos[1])
+            generaCuadruples(AST->hijos[1]),
+            generaCuadruples(AST->hijos[0])
         );
         pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
         sprintf(cuadruples,"%s\n(MOVx,%s",cuadruples,trim(valorTemp));
@@ -396,7 +396,14 @@ void postSin(){
     
 
     
-    printf(generaCuadruples(AST));
+    char *cuadruples = (generaCuadruples(AST));
+    
+    FILE *fout = fopen ("cuadrupes.txt", "w");
+    if (fout != NULL) {
+        fprintf (fout, "%s", cuadruples);
+        fclose (fout);
+    }
+    printf("%s",cuadruples);
 
 }
 
