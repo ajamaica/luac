@@ -1,9 +1,10 @@
-id = 1 + 1 * 2 - 3
-while ( id < 10 ) do
-    i = 0;
-    while ( i < 5 ) do
-        i = i + 1
-    end
-    id = id + 1
+id = 1;
+if ( id == 1 ) then
+    id = 2
+elseif ( id == 2 ) then
+    id = 3   
+elseif ( id == 3 ) then
+    id = 4
+else
+    id = 5
 end
-

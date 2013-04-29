@@ -22,7 +22,7 @@ while ( i < 10 ) do
         P1 = 248
     elseif ( i == 8 ) then
         P1 = 128
-    else
+    elseif ( i == 9 ) then
         P1 = 144
     end
 end
