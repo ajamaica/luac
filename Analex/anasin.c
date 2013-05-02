@@ -370,11 +370,9 @@ char* generaCuadruples(NodoArbol* AST)
         sprintf(valorTemp,"E%d",idxRef);
         push(stackCuadruples,0,(char)0,valorTemp);
         
-        printf("aqui\n\n\n\n");
         //printArbol(AST->hijos[2]);
         //Genero los cuadruples de false
         sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[2]));
-                printf("aqui2\n\n\n\n");       
         //Extraigo e imprimo la etiqueta de fin
         pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
         sprintf(cuadruples,"%s\n(%s,,,)",cuadruples,valorTemp);
@@ -394,6 +392,32 @@ char* generaCuadruples(NodoArbol* AST)
     
 }
 
+char** tokenize(const char* str)
+{
+    int count = 0;
+    int capacity = 10;
+    char** result = malloc(capacity*sizeof(*result));
+    
+    const char* e=str;
+    
+    if (e) do
+    {
+        const char* s=e;
+        e=strpbrk(s,"\n");
+        
+        if (count >= capacity)
+            result = realloc(result, (capacity*=2)*sizeof(*result));
+        
+        result[count++] = e? strndup(s, e-s) : strdup(s);
+    } while (e && *(++e));
+    
+    if (count >= capacity)
+        result = realloc(result, (capacity+=1)*sizeof(*result));
+    result[count++] = 0;
+    
+    return result;
+}
+
 void postSin(){
     
     NodoArbol *AST;
@@ -410,7 +434,17 @@ void postSin(){
         fprintf (fout, "%s", cuadruples);
         fclose (fout);
     }
-    printf("%s",cuadruples);
+    
+    char **tokenizados;
+    tokenizados = tokenize(cuadruples);
+    
+    int i=0;
+    while (tokenizados[i] != NULL) {
+        printf(">> %s \n ",tokenizados[i]);
+        i++;
+    }
+    
+    
 
 }
 

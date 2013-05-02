@@ -16,7 +16,7 @@ SCOPE ->  .
 EXP -> EXP binop T .
 EXP -> T .
 T -> F .
-F -> (EXP) .
+F -> ( EXP ) .
 F -> true .
 F -> false .
 F -> numer .
