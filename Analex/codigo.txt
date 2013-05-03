@@ -1,1 +1,8 @@
-local identificador = 1 + 3
+if true then
+    i = 0
+elseif true then
+    i = 0
+else
+    i = 0
+end
+
