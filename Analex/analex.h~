@@ -133,18 +133,28 @@ int reales(worker *a , char c) {
 				sprintf((*a).buf+ultimo((*a).buf), "%c", c);
 				return 0;
 			} else {
+<<<<<<< HEAD
                 
                 /*simbolo *sim = (simbolo *) malloc(sizeof(simbolo *));
+=======
+                // Numero Real
+                simbolo *sim = (simbolo *) malloc(sizeof(simbolo *));
+>>>>>>> e2a18c4981d4f2e06307c6291160a6d9fe0a47a9
                 char * buff = (char *) malloc(sizeof(char*));
                 sprintf(buff, "%s", (*a).buf);
                 sim->nombre = (char *) malloc(sizeof(char*));
                 strcpy(sim->nombre, buff);
                 sim->tipo_de_dato = (char *) malloc(sizeof(char*));
+<<<<<<< HEAD
                 strcpy(sim->tipo_de_dato, "Numero Real");
                 insertar(&ta,sim);*/
+=======
+                strcpy(sim->tipo_de_dato, "numer");
+                insertar(&ta,sim);
+>>>>>>> e2a18c4981d4f2e06307c6291160a6d9fe0a47a9
                 
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Real");
-				lexema((*a).buf,"Numero Real" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"numer");
+				lexema((*a).buf,"numer" );
 				return 1;
 			}
 			break;
@@ -315,8 +325,8 @@ int asignacion(worker *a, char c){
             
             
             if ((isdigit(c) || c == ' ' || isalpha(c)) && commentariossi == 0) {
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Aritmetico");
-				lexema((*a).buf,"Asignacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
                 (*a).estado = -1;
 				return 1;
 			}
@@ -397,7 +407,7 @@ int ids(worker *a , char c) {
                     strcpy(sim->nombre, buff);
                     sim->tipo_de_dato = (char *) malloc(sizeof(char*));
                     strcpy(sim->tipo_de_dato, "id");
-		    sim->valor = (int) 1;
+		    sim->valor = (int) -1;
                     insertar(&ta,sim);
                     
 					fprintf(stdout, "%s\t%s\n",(*a).buf,"id");

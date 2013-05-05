@@ -140,11 +140,12 @@ int reales(worker *a , char c) {
                 sim->nombre = (char *) malloc(sizeof(char*));
                 strcpy(sim->nombre, buff);
                 sim->tipo_de_dato = (char *) malloc(sizeof(char*));
+
                 strcpy(sim->tipo_de_dato, "Numero Real");
                 insertar(&ta,sim);*/
                 
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Numero Real");
-				lexema((*a).buf,"Numero Real" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"numer");
+				lexema((*a).buf,"numer" );
 				return 1;
 			}
 			break;
@@ -315,8 +316,8 @@ int asignacion(worker *a, char c){
             
             
             if ((isdigit(c) || c == ' ' || isalpha(c)) && commentariossi == 0) {
-				fprintf(stdout, "%s\t%s\n",(*a).buf,"Aritmetico");
-				lexema((*a).buf,"Asignacion" );
+				fprintf(stdout, "%s\t%s\n",(*a).buf,"binop");
+				lexema((*a).buf,"binop" );
                 (*a).estado = -1;
 				return 1;
 			}

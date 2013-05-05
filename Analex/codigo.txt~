@@ -1,1 +1,14 @@
+<<<<<<< HEAD
 local id = 2 + 3
+=======
+id = 1;
+if ( id == 1 ) then
+    id = 2
+elseif ( id == 2 ) then
+    id = 3   
+elseif ( id == 3 ) then
+    id = 4
+else
+    id = 5
+end
+>>>>>>> e2a18c4981d4f2e06307c6291160a6d9fe0a47a9

@@ -26,9 +26,20 @@ int numero;
 char letra;
 simbolo tabla_de_simbolos;
 
+int idxBool;
+int idxTerm;
+int idxRef;
+char * valorTemp;
+int intBasura;
+char charBasura;
 
-int main (int argc, const char * argv[]) {
+Elemento ** stackCuadruples;
+
     
+int main (int argc, const char * argv[]) {
+    idxBool = idxTerm = idxRef = 0;
+    stackCuadruples = malloc(sizeof(Elemento*));
+    valorTemp = (char*)malloc(100);
     
     
     NodoArbol** arbol;
@@ -64,12 +75,388 @@ int main (int argc, const char * argv[]) {
     
     
     Anasin();
+    
 }
+
+char *ltrim(char *s)
+{
+    while(isspace(*s)) s++;
+    return s;
+}
+
+char *rtrim(char *s)
+{
+    char* back = s + strlen(s);
+    while(isspace(*--back));
+    *(back+1) = '\0';
+    return s;
+}
+
+char *trim(char *s)
+{
+    return rtrim(ltrim(s)); 
+}
+
+
+
+
+
+
+
+NodoArbol* limpiaAST(NodoArbol *arbol){
+    NodoArbol *nuevo;
+    NodoArbol *aux;
+    if(arbol->numHijos==0)
+    {
+        if(!strcmp(arbol->valor,"epsilon") || !strcmp(arbol->valor,""))
+           {
+               return NULL;
+           }
+           else
+           {
+               return arbol;
+           }
+    }
+    else
+    {
+        nuevo = (NodoArbol*)malloc(sizeof(NodoArbol));
+        if(!strcmp(arbol->valor,"BLOCK")||!strcmp(arbol->valor, "STATLIST"))
+        {
+            creaHoja(&nuevo, 1, "");
+        }
+        else
+        {
+            creaHoja(&nuevo,arbol->tipo,arbol->valor);
+        }
+        for(int i = 0; i<arbol->numHijos;i++)
+        {
+            aux = limpiaAST(arbol->hijos[i]);
+            if (aux!=NULL)
+            {
+                agregaHijoExistente(&nuevo,&aux);
+            }
+        }
+        return nuevo;
+    }
+    
+    
+}
+
+char* generaCuadruples(NodoArbol* AST)
+{
+    char * cuadruples = (char*)malloc(sizeof(*AST)*30);
+    strcpy(cuadruples,"");
+    
+    int i;
+    
+    
+    if(!strcmp(AST->valor,""))
+    {
+        for(i = AST->numHijos-1; i>=0;i--)
+        {
+            strcat(cuadruples,generaCuadruples(AST->hijos[i]));
+        }
+    }
+    else if(!strcmp(AST->valor,"missElse"))
+    {
+        //nada
+    }
+    else if(!strcmp(AST->valor,">\n"))
+    {
+    
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[0]),
+            generaCuadruples(AST->hijos[1])
+        );
+        idxBool++;
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(LTx,B%d,%s",cuadruples,idxBool,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
+        sprintf(valorTemp,"B%d",idxBool);
+        push(stackCuadruples,0,(char)0,valorTemp);
+        
+    }
+    else if(!strcmp(AST->valor,"<\n"))
+    {
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[1]),
+            generaCuadruples(AST->hijos[0])
+        );
+        idxBool++;
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(LTx,B%d,%s",cuadruples,idxBool,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
+        sprintf(valorTemp,"B%d",idxBool);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
+    else if(!strcmp(AST->valor,"==\n"))
+    {
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[0]),
+            generaCuadruples(AST->hijos[1])
+        );
+        idxBool++;
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(EQx,B%d,%s",cuadruples,idxBool,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
+        sprintf(valorTemp,"B%d",idxBool);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
+    else if(!strcmp(AST->valor,"+\n"))
+    {
+        //Genero cuadruples de los hijos de ser necesario
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[0]),
+            generaCuadruples(AST->hijos[1])
+        );
+        idxTerm++;
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(ADDx,T%d,%s",cuadruples,idxTerm,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
+        sprintf(valorTemp,"T%d",idxTerm);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
+    else if(!strcmp(AST->valor,"-\n"))
+    {
+        
+        //Genero cuadruples de los hijos de ser necesario
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[0]),
+            generaCuadruples(AST->hijos[1])
+        );
+        idxTerm++;
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(SUBx,T%d,%s",cuadruples,idxTerm,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
+        sprintf(valorTemp,"T%d",idxTerm);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
+    else if(!strcmp(AST->valor,"*\n"))
+    {
+        
+        //Genero cuadruples de los hijos de ser necesario
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[0]),
+            generaCuadruples(AST->hijos[1])
+        );
+        idxTerm++;
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(MULx,T%d,%s",cuadruples,idxTerm,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
+        sprintf(valorTemp,"T%d",idxTerm);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
+    else if(!strcmp(AST->valor,"/\n"))
+    {
+        //Genero cuadruples de los hijos de ser necesario
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[0]),
+            generaCuadruples(AST->hijos[1])
+        );
+        idxTerm++;
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(DIVx,T%d,%s",cuadruples,idxTerm,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s)",cuadruples,trim(valorTemp));
+        sprintf(valorTemp,"T%d",idxTerm);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
+    else if(!strcmp(AST->valor,"="))
+    {
+        sprintf(
+            cuadruples,
+            "%s\n%s\n%s",
+            cuadruples,
+            generaCuadruples(AST->hijos[1]),
+            generaCuadruples(AST->hijos[0])
+        );
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(MOVx,%s",cuadruples,trim(valorTemp));
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s,%s,,)",cuadruples,trim(valorTemp));
+    }
+    else if(!strcmp(AST->valor,"while"))
+    {
+        char endLbl[10];
+        //Genero etiqueta de condicion
+        idxRef++;
+        sprintf(cuadruples,"%s\n(E%d,,,)",cuadruples,idxRef);
+        //Introduzco la etiqueta en la pila
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+
+        //Genero los cuadruples de la condicion
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[1]));
+        //Saco el booleano de la condicion
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(BRT,%s",cuadruples,valorTemp);
+        //Genero la etiqueta de accion y termino el salto condicional
+        idxRef++;
+
+        sprintf(cuadruples,"%s,,E%d)",cuadruples,idxRef);
+        //Genero el salto de terminacion
+        idxRef++;
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)",cuadruples,idxRef);
+        //Introduzco la etiqueta de terminacion al stack
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+        //Imprimo la etiqueta de accion
+        sprintf(cuadruples,"%s\n(E%d,,,)",cuadruples,idxRef-1);
+        //Genero los cuadruples de accion
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[0]));
+        //Extraigo la etiqueta de terminacion
+        pop(stackCuadruples,&intBasura,&charBasura,endLbl);
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        //imprimo el salto de condicion y la etiqueta de terminacion
+        sprintf(cuadruples,"%s\n(JUMP,%s,,)\n(%s,,,)",cuadruples,valorTemp,endLbl);
+    }
+    else if(!strcmp(AST->valor,"if"))
+    {
+
+        //Genero los cuadruples de la condicion
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[1]));
+        
+        //Saco el booleano de la condicion
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(BRT,%s",cuadruples,valorTemp);
+        //Genero la etiqueta de true y termino el salto condicional
+        idxRef++;
+        sprintf(cuadruples,"%s,,E%d)",cuadruples,idxRef);
+        //Imprimo el salto de false
+        idxRef++;
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)",cuadruples,idxRef);
+        //Imprimo la etiqueta de true
+        sprintf(cuadruples,"%s,\n(E%d,,,)",cuadruples,idxRef-1);
+        //Introduzco la etiqueta de false
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+        //Genero los cuadruples de true
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[0]));
+        //Imprimo el salto de fin
+        idxRef++;
+        sprintf(cuadruples,"%s\n(JUMP,E%d,,)",cuadruples,idxRef);
+
+        //Extraigo e imprimo la etiqueta de false
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(%s,,,)",cuadruples,valorTemp);
+        //Introduzco la etiqueta de fin
+        sprintf(valorTemp,"E%d",idxRef);
+        push(stackCuadruples,0,(char)0,valorTemp);
+        
+        //printArbol(AST->hijos[2]);
+        //Genero los cuadruples de false
+        sprintf(cuadruples,"%s\n%s",cuadruples,generaCuadruples(AST->hijos[2]));
+        //Extraigo e imprimo la etiqueta de fin
+        pop(stackCuadruples,&intBasura,&charBasura,valorTemp);
+        sprintf(cuadruples,"%s\n(%s,,,)",cuadruples,valorTemp);
+        //printf("%s\n",cuadruples);
+    }
+    else
+    {
+        // Truncamos valor
+        char *token;
+        char *search = ".";
+        token = strtok(AST->valor, search);
+        printf("Hoja del AST, agregamos: %s\n",token);
+        push(stackCuadruples,0,(char)0,token);
+    }
+
+    return cuadruples;
+    
+}
+
+char** tokenize(const char* str)
+{
+    int count = 0;
+    int capacity = 10;
+    char** result = malloc(capacity*sizeof(*result));
+    
+    const char* e=str;
+    
+    if (e) do
+    {
+        const char* s=e;
+        e=strpbrk(s,"\n");
+        
+        if (count >= capacity)
+            result = realloc(result, (capacity*=2)*sizeof(*result));
+        
+        result[count++] = e? strndup(s, e-s) : strdup(s);
+    } while (e && *(++e));
+    
+    if (count >= capacity)
+        result = realloc(result, (capacity+=1)*sizeof(*result));
+    result[count++] = 0;
+    
+    return result;
+}
+
+void postSin(){
+    
+    NodoArbol *AST;
+    AST = popT(&ASTstack);
+    AST = limpiaAST(AST);
+    printArbol(AST);
+    printT(&ASTstack);
+
+    
+    char *cuadruples = (generaCuadruples(AST));
+    
+    FILE *fout = fopen ("cuadruples.txt", "w");
+    if (fout != NULL) {
+        fprintf (fout, "%s", cuadruples);
+        fclose (fout);
+    }
+    
+    char **tokenizados;
+    tokenizados = tokenize(cuadruples);
+    
+    int i=0;
+    while (tokenizados[i] != NULL) {
+        printf(">> %s \n ",tokenizados[i]);
+	printf("primer token %d \n ",tokenizados[i][0]);
+        i++;
+    }
+    
+    
+
+}
+
+
+
 
 int ok(){
     
     printf("LO LOGRAMOS!!!!! MERECEMOS UNA CERVEZA.\n");
     imprimir(&tabla_de_simbolos);
+    postSin();
     exit(0);
 }
 
@@ -123,11 +510,13 @@ int r(){
     NodoArbol ** nuevoArbol;
     NodoArbol ** hojaAux;
     NodoArbol ** ASTArbol;
+    NodoArbol * aux2;
     nuevoArbol = (NodoArbol**) malloc(sizeof(NodoArbol*));
     ASTArbol = (NodoArbol**) malloc(sizeof(NodoArbol*));
     
     //arbolDePila es el arbol que sale de la pila y se va a convertir en una hoja de nuevoArbol
     NodoArbol * arbolDePila;
+
     
     switch(tipo_de_reduccion){
         case 0: //CHUNK -> BLOCK
@@ -136,11 +525,6 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
-<<<<<<< HEAD
-            
-            
-=======
->>>>>>> 249cb4e8593b117efa5a65da7f7fd9687a4e4c0c
             break;
         case 1: //BLOCK -> SCOPE STATLIST
             printf("Accion semantica 5\n");
@@ -172,6 +556,17 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
+            
+            creaHoja(ASTArbol,1,"BLOCK");
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            arbolDePila = popT(&ASTstack);
+            agregaHijoExistente(ASTArbol,arbolDePila);
+            pushT(*ASTArbol,&ASTstack);
             //Me lo salto por sanidad mental
             
             break;
@@ -182,6 +577,9 @@ int r(){
             creaHoja(hojaAux, 0, ";");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
+            
+            creaHoja(ASTArbol,0,";");
+            pushT(*ASTArbol,&ASTstack);
             break;
         case 4: //SEMI -> epsilon
             printf("Accion semantica 4\n");
@@ -415,15 +813,23 @@ int r(){
             creaHoja(hojaAux, 0, "");
             agregaHijoExistente(nuevoArbol, hojaAux);
             pushT(*nuevoArbol, &nodosHuerfanos);
-            //CHECAR
-            creaHoja(ASTArbol,1,"if");
+            
+            
+            
+            NodoArbol * arbolDePilaAux;
+            
             arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            pushT(*ASTArbol, &ASTstack);
+            arbolDePilaAux = aux2 = popT(&ASTstack);
+            while(!strcmp(aux2->valor,"if")&&aux2->numHijos==3)
+            {
+                aux2 = aux2->hijos[(aux2->numHijos)-1];
+            }
+            printf("Termino el ciclo\n");
+            //aux2 = aux2->hijos[0];
+            agregaHijoExistente(&aux2,&arbolDePila);
+            printf("1\n");
+            pushT(arbolDePilaAux,&ASTstack);
+            printf("2\n");
             break;
         case 20: // CONDS -> CONDLIST
             printf("Accion semantica 20\n");
@@ -432,6 +838,9 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, "missElse");
+            pushT(*hojaAux,&ASTstack);
             break;
         case 21: // CONDS -> CONDLIST else BLOCK
             printf("Accion semantica 21\n");
@@ -445,12 +854,13 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
-            creaHoja(ASTArbol,1,"else");
+            
+           
+           
             arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
+            *ASTArbol = popT(&ASTstack);
             pushT(*ASTArbol, &ASTstack);
+            pushT(arbolDePila, &ASTstack);
             
             break;
         case 22: // CONDLIST -> COND
@@ -462,6 +872,7 @@ int r(){
             
             break;
         case 23: // CONDLIST -> CONDLIST elseif COND
+
             printf("Accion semantica 23\n");
             creaHoja(nuevoArbol, 1, "CONDLIST");
             arbolDePila = popT(&nodosHuerfanos);
@@ -473,12 +884,17 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
-            creaHoja(ASTArbol,1,"elseif");
+            //creaHoja(ASTArbol,1,"elseif");
             arbolDePila = popT(&ASTstack);
+            *ASTArbol = aux2 = popT(&ASTstack);
+            while(!(!strcmp((*ASTArbol)->valor,"if")&&(*ASTArbol)->numHijos!=3))
+            {
+                printf("Que? %s, %d\n",(*ASTArbol)->valor,(*ASTArbol)->numHijos);
+                *ASTArbol = (*ASTArbol)->hijos[(*ASTArbol)->numHijos-1];
+            }
             agregaHijoExistente(ASTArbol, &arbolDePila);
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
-            pushT(*ASTArbol, &ASTstack);
+            pushT(aux2, &ASTstack);
+            printf("No lo entiendo\n");
             
             break;
         case 24: // COND -> EXP then BLOCK
@@ -493,7 +909,7 @@ int r(){
             agregaHijoExistente(nuevoArbol, &arbolDePila);
             pushT(*nuevoArbol, &nodosHuerfanos);
             
-            creaHoja(ASTArbol,1,"then");
+            creaHoja(ASTArbol,1,"if");
             arbolDePila = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
             arbolDePila = popT(&ASTstack);
@@ -543,8 +959,9 @@ int r(){
             pushT(*nuevoArbol, &nodosHuerfanos);
             
             creaHoja(ASTArbol,1,"=");
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, valorsignificativo);
+            agregaHijoExistente(ASTArbol, hojaAux);
             arbolDePila = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
             pushT(*ASTArbol, &ASTstack);
@@ -552,7 +969,7 @@ int r(){
             
             amodificar = search(valorsignificativo, &tabla_de_simbolos);
             amodificar->alcance = 1;
-	    amodificar->valor = 0;
+	    //amodificar->valor = 0;
             //imprimir(&tabla_de_simbolos);
             break;
         case 28: // BINDING -> id = EXP
@@ -570,17 +987,18 @@ int r(){
             pushT(*nuevoArbol, &nodosHuerfanos);
             
             creaHoja(ASTArbol,1,"=");
-            arbolDePila = popT(&ASTstack);
-            agregaHijoExistente(ASTArbol, &arbolDePila);
+            hojaAux = (NodoArbol**) malloc(sizeof(NodoArbol*));
+            creaHoja(hojaAux, 0, valorsignificativo);
+            agregaHijoExistente(ASTArbol, hojaAux);
             arbolDePila = popT(&ASTstack);
             agregaHijoExistente(ASTArbol, &arbolDePila);
             pushT(*ASTArbol, &ASTstack);
             break;
             
     }
-    printf("============================================================================\n ARBOL SINTACTICO \n===========================================================================\n");
+     /*printf("============================================================================\n ARBOL SINTACTICO \n===========================================================================\n");
     printT(&nodosHuerfanos);
-    
+    */
     printf("============================================================================\n ARBOL AST \n===========================================================================\n");
     printT(&ASTstack);
     //printT2(&ASTstack);
@@ -693,3 +1111,5 @@ int index_of(char *string){
     }
     return -1;
 }
+
+

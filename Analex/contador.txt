@@ -26,4 +26,3 @@ while ( i < 10 ) do
         P1 = 144
     end
 end
-
