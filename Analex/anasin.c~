@@ -14,7 +14,7 @@
 #include "List.h"
 #include "tablasim.h"
 #include "arbol.h"
-
+#include <string.h>
 
 FILE * fp;
 Elemento ** stack;
@@ -32,6 +32,7 @@ int idxRef;
 char * valorTemp;
 int intBasura;
 char charBasura;
+char * registros[8]; //Registros
 
 Elemento ** stackCuadruples;
 
@@ -418,6 +419,68 @@ char** tokenize(const char* str)
     return result;
 }
 
+
+char * getValor(char ** tokenizados , int i, int j){
+	char aux [20];
+	printf("Concatenando %c i:%d j:%d \n",tokenizados[i][j],i,j);
+	if(tokenizados[i][j] >= 48 && tokenizados[i][j] <= 57){
+		while(tokenizados[i][j] >= 48 && tokenizados[i][j] <= 57 && tokenizados[i][j] != NULL){
+			printf("Concatenando num %c \n",tokenizados[i][j]);
+			
+			strcat(aux, f[0]);
+			printf("Valor aux: % s\n", aux);
+			j++;
+		}
+	} else {
+		while(tokenizados[i][j] >= 65 && tokenizados[i][j] <= 122 && tokenizados[i][j] != NULL){
+			printf("Concatenando id %c \n",tokenizados[i][j]);
+			strcat(aux,tokenizados[i][j]);
+			j++;
+		}
+		int y = 0;
+		while (y < 8){
+			if(strcmp(registros[y],aux) == 0){
+				aux="R";
+				strcat(aux,(char) y);
+			}
+			y++;
+		}
+		
+	}
+	return aux;
+}
+
+char * getId(char ** tokenizados , int i, int j){
+	char *aux;
+	while(tokenizados[i][j] >= 65 && tokenizados[i][j] <= 122){
+			strcat(aux,tokenizados[i][j]);
+			j++;
+	}
+	return aux;
+}
+
+char * utilizaRegistroDisponible(char * valor){
+	int i = 0;
+	char *r = "R";
+	while(i < 8){
+		if(r[i] == NULL){
+			registros[i]=valor;
+		} else {
+			r = "NA";
+		}
+		i++;
+	}
+	strcat(r,(char) i);
+	return 	r;
+}
+
+int esNumero(char c){
+	if(c >= 48 && c <= 57){
+		return true;
+	}
+	return false;
+}
+
 void postSin(){
     
     NodoArbol *AST;
@@ -430,26 +493,55 @@ void postSin(){
     char *cuadruples = (generaCuadruples(AST));
     
     FILE *fout = fopen ("cuadruples.txt", "w");
+    FILE *eout = fopen ("ensamblador.esm", "w");
     if (fout != NULL) {
         fprintf (fout, "%s", cuadruples);
         fclose (fout);
+    }
+
+    if(eout == NULL){
+	printf("Error reading esamblador \n");
     }
     
     char **tokenizados;
     tokenizados = tokenize(cuadruples);
     
     int i=0;
+    int j=1;
     while (tokenizados[i] != NULL) {
         printf(">> %s \n ",tokenizados[i]);
-	printf("primer token %d \n ",tokenizados[i][0]);
-        i++;
+	
+	if(tokenizados[i][j] == 'E'){
+	
+		if(tokenizados[i][++j] == 'Q'){
+			++j; //Saltamos 'x'
+			++j; //Saltamos ','
+			fprintf(eout,"EQx %c: \n",tokenizados[i][++j]);
+		}
+		fprintf(eout,"E%c: \n",tokenizados[i][++j]);
+	}
+		
+	if(tokenizados[i][j] == 'M'){	
+		j += 5; //Saltamos OVx,
+		char * aux = getValor(tokenizados, i,j);
+		char * aux2 = getId(tokenizados, i,j);
+		j++;//Saltamos ,
+		
+		fprintf(eout,"MOVx %s, %s \n",aux,aux2);
+	}
+
+	if(tokenizados[i][j] == 'J'){
+		printf("Es un J \n");
+	}
+
+        i++; //Next line
+	j=1;
+	
     }
     
-    
+     fclose (eout);
 
 }
-
-
 
 
 int ok(){
