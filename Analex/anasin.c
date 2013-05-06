@@ -582,7 +582,7 @@ void postSin(){
 		char * r = (char *) malloc(10);
 		r[0] ='\0';
 		utilizaRegistroDisponible(aux2,r);		
-		fprintf(eout,"MOVx %s, %s \n",r,aux);
+		fprintf(eout,"MOV  %s, %s \n",r,aux);
 	}
 
 	if(tokenizados[i][j] == 'J'){

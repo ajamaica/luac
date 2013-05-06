@@ -587,7 +587,7 @@ void postSin(){
 
 	if(tokenizados[i][j] == 'J'){
 		j += 5; //Saltamos UMP,
-		printf("Jump %c \n",tokenizados[i][j]);
+		//printf("Jump %c \n",tokenizados[i][j]);
 		char* aux = getValor(tokenizados, &i,&j);
 		fprintf(eout,"JMP %s \n",aux);
 	}
