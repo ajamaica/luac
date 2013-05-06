@@ -1,14 +1,29 @@
-<<<<<<< HEAD
-local id = 2 + 3
-=======
-id = 1;
-if ( id == 1 ) then
-    id = 2
-elseif ( id == 2 ) then
-    id = 3   
-elseif ( id == 3 ) then
-    id = 4
-else
-    id = 5
+i = 10
+while ( i < 10 ) do
+    i = i + 1
+    if ( i > 9 ) then
+        i = 0
+    end
+    if ( i == 0 ) then
+        P1 = 176
+    elseif ( i == 1 ) then
+        P1 = 249
+    elseif ( i == 2 ) then
+        P1 = 192
+    elseif ( i == 3 ) then
+        P1 = 176
+    elseif ( i == 4 ) then
+        P1 = 153
+    elseif ( i == 5 ) then
+        P1 = 146
+    elseif ( i == 6 ) then
+        P1 = 130
+    elseif ( i == 7 ) then
+        P1 = 248
+    elseif ( i == 8 ) then
+        P1 = 128
+    else
+        P1 = 144
+    end
 end
->>>>>>> e2a18c4981d4f2e06307c6291160a6d9fe0a47a9
+

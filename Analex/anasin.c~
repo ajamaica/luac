@@ -33,11 +33,20 @@ char * valorTemp;
 int intBasura;
 char charBasura;
 char * registros[8]; //Registros
-
 Elemento ** stackCuadruples;
 
     
 int main (int argc, const char * argv[]) {
+    //registros = (char *) malloc(8);
+    int i = 0;
+    
+    while(i < 8){
+	printf("Inicializando registros");
+	registros[i]=(char *) malloc(sizeof(char *));
+	registros[i][0] = '\0';
+	strcpy(registros[i],"");
+	i++;
+    }	
     idxBool = idxTerm = idxRef = 0;
     stackCuadruples = malloc(sizeof(Elemento*));
     valorTemp = (char*)malloc(100);
@@ -420,66 +429,101 @@ char** tokenize(const char* str)
 }
 
 
-char * getValor(char ** tokenizados , int i, int j){
-	char aux [20];
-	printf("Concatenando %c i:%d j:%d \n",tokenizados[i][j],i,j);
-	if(tokenizados[i][j] >= 48 && tokenizados[i][j] <= 57){
-		while(tokenizados[i][j] >= 48 && tokenizados[i][j] <= 57 && tokenizados[i][j] != NULL){
-			printf("Concatenando num %c \n",tokenizados[i][j]);
-			
-			strcat(aux, f[0]);
-			printf("Valor aux: % s\n", aux);
-			j++;
+char * getValor(char ** tokenizados , int* i, int* j){
+	char *aux = (char *) malloc(20);
+	strcpy(aux,"");
+	int len;
+	//printf("Trabajando getValor i:%d j:%d \n",*i,*j);
+	if(tokenizados[*i][*j] >= 48 && tokenizados[*i][*j] <= 57){
+			len = strlen(aux);
+			aux[len] = '#';
+			aux[len + 1] = '\0';
+		while(tokenizados[*i][*j] != NULL && tokenizados[*i][*j] >= 48 && tokenizados[*i][*j] <= 57){
+			//printf("Concatenando num %c \n",tokenizados[i][j]);
+			len = strlen(aux);
+			aux[len] = tokenizados[*i][*j];
+			aux[len + 1] = '\0';
+			//printf("aux: % s\n", aux);	
+			(*j)++;
 		}
 	} else {
-		while(tokenizados[i][j] >= 65 && tokenizados[i][j] <= 122 && tokenizados[i][j] != NULL){
-			printf("Concatenando id %c \n",tokenizados[i][j]);
-			strcat(aux,tokenizados[i][j]);
-			j++;
+		while(tokenizados[*i][*j] != NULL && tokenizados[*i][*j] >= 65 && tokenizados[*i][*j] <= 122 || tokenizados[*i][*j] >= 48 && tokenizados[*i][*j] <= 57){
+			len = strlen(aux);
+			aux[len] = tokenizados[*i][*j];
+			aux[len + 1] = '\0';
+			//printf("aux: % s\n", aux);	
+			(*j)++;
 		}
 		int y = 0;
 		while (y < 8){
-			if(strcmp(registros[y],aux) == 0){
-				aux="R";
-				strcat(aux,(char) y);
+			//printf("buscando el registro %s\n",registros[y]);
+			if((registros[y] != NULL) && (strcmp(registros[y],aux) == 0)){
+				char *registro =  (char *) malloc(10);
+				strcpy(registro,"");
+				sprintf(registro,"R%d",y);
+				//printf("Registro encontrado %s para %s \n",registro, registros[y]);
+				return registro;
 			}
 			y++;
 		}
-		
 	}
 	return aux;
 }
 
-char * getId(char ** tokenizados , int i, int j){
-	char *aux;
-	while(tokenizados[i][j] >= 65 && tokenizados[i][j] <= 122){
-			strcat(aux,tokenizados[i][j]);
-			j++;
+char * getId(char ** tokenizados , int* i, int* j){
+	//printf("Trabajando getId i:%d j:%d \n",*i,*j);
+	char *aux = (char *) malloc(20);
+	strcpy(aux,"");
+	int len;
+	while(tokenizados[*i][*j] != NULL && tokenizados[*i][*j] >= 65 && tokenizados[*i][*j] <= 122 || tokenizados[*i][*j] >= 48 && tokenizados[*i][*j] <= 57){
+		len = strlen(aux);
+		aux[len] = tokenizados[*i][*j];
+		aux[len + 1] = '\0';
+		//printf("id: % s\n", aux);	
+		(*j)++;
 	}
 	return aux;
 }
 
-char * utilizaRegistroDisponible(char * valor){
+char* utilizaRegistroDisponible(char * valor, char* r){
 	int i = 0;
-	char *r = "R";
+	int ocupados = 0;
+	
+	strcpy(r,"R");
 	while(i < 8){
-		if(r[i] == NULL){
-			registros[i]=valor;
+		//printf("Buscando registro \n");
+		if(strcmp(registros[i], valor) != 0 && strcmp(registros[i], "") == 0){
+			strcpy(registros[i],valor);
+			sprintf(r,"R%d",i);
+			return r;
 		} else {
-			r = "NA";
+			ocupados = 1;
 		}
 		i++;
 	}
-	strcat(r,(char) i);
-	return 	r;
+
+	if(ocupados){
+		int oldes = 256;
+		int pos = 0;
+		while(i < 8){
+			//printf("Registros llenos \n");
+			if(registros[i][1] == 'T' || registros[i][1] == 'B' || registros[i][1] == 'P'){
+				int aux = atoi(&registros[i][2]);
+				if(aux < oldes){
+					oldes = aux;
+					pos = i;
+				}
+			} 
+			i++;
+		}
+		strcpy(registros[pos],valor);
+		sprintf(r,"R%d",i);
+		//printf("Sustuyendo registro  \n");
+		return r;
+	}
+	
 }
 
-int esNumero(char c){
-	if(c >= 48 && c <= 57){
-		return true;
-	}
-	return false;
-}
 
 void postSin(){
     
@@ -512,26 +556,74 @@ void postSin(){
         printf(">> %s \n ",tokenizados[i]);
 	
 	if(tokenizados[i][j] == 'E'){
-	
+			
 		if(tokenizados[i][++j] == 'Q'){
-			++j; //Saltamos 'x'
-			++j; //Saltamos ','
-			fprintf(eout,"EQx %c: \n",tokenizados[i][++j]);
+			j += 3; //Saltamos 'x' ','
+			printf("next :%c \n", tokenizados[i][j]);
+			char* aux = getValor(tokenizados, &i,&j);
+			char* r;
+			//utilizaRegistroDisponible(aux,r);//Obtener un registro disponible
+			
+			fprintf(eout,"CJNE %s \n", aux);
+			fprintf(eout,"LJMP %s \n", aux);
+		} else {
+			char* aux = getId(tokenizados, &i,&j);
+			//printf("E%s: \n",aux);
+			fprintf(eout,"E%s: \n",aux);
 		}
-		fprintf(eout,"E%c: \n",tokenizados[i][++j]);
+		
 	}
 		
 	if(tokenizados[i][j] == 'M'){	
 		j += 5; //Saltamos OVx,
-		char * aux = getValor(tokenizados, i,j);
-		char * aux2 = getId(tokenizados, i,j);
+		char * aux = getValor(tokenizados, &i,&j);
 		j++;//Saltamos ,
-		
-		fprintf(eout,"MOVx %s, %s \n",aux,aux2);
+		char * aux2 = getId(tokenizados, &i,&j); //Obtengo a quien se lo voy a asignar
+		char * r = (char *) malloc(10);
+		r[0] ='\0';
+		utilizaRegistroDisponible(aux2,r);		
+		fprintf(eout,"MOVx %s, %s \n",r,aux);
 	}
 
 	if(tokenizados[i][j] == 'J'){
-		printf("Es un J \n");
+		j += 5; //Saltamos UMP,
+		printf("Jump %c \n",tokenizados[i][j]);
+		char* aux = getValor(tokenizados, &i,&j);
+		fprintf(eout,"JMP %s \n",aux);
+	}
+
+	if(tokenizados[i][j] == 'L'){
+		j += 4; //Saltamos Tx,
+		//printf("LTx %c \n",tokenizados[i][j]);
+		char* aux = getValor(tokenizados, &i,&j);
+		fprintf(eout,"CJNE %s \n", aux);
+		fprintf(eout,"LJMP %s \n", aux);
+	}
+	if(tokenizados[i][j] == 'A'){
+		if(tokenizados[i][++j] == 'D'){
+			//j+=5; //Saltando DDx,
+			char* aux = getValor(tokenizados, &i,&j);
+			char* r;
+			//printf("ADDx %c \n",tokenizados[i][j]);
+			//utilizaRegistroDisponible(aux,r);
+			/*j++; //Saltando ,
+			char* aux2 = getValor(tokenizados, &i,&j);
+			j++; //Saltando ,
+			char* aux3 = getValor(tokenizados, &i,&j);
+			fprintf(eout,"MOVE A %s \n", aux2);
+			fprintf(eout,"ADD %s \n", aux3);
+			fprintf(eout,"MOVE %s A \n", aux);*/
+		} else{	
+			j+=3; //Saltando ND
+			char* aux = getValor(tokenizados, &i,&j);
+			j++; //Saltando ,
+			char* aux2 = getValor(tokenizados, &i,&j);
+			j++; //Saltand ,
+			char* aux3 = getValor(tokenizados, &i,&j);
+			fprintf(eout,"MOVE A %s \n", aux2);
+			fprintf(eout,"ANL A %s \n", aux3);
+			fprintf(eout,"MOVE %s A \n", aux);
+		}
 	}
 
         i++; //Next line
