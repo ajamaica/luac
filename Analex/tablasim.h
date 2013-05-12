@@ -47,7 +47,7 @@ int tamano(simbolo *t)
         t = t->sig;
         
     }
-    return tamano;
+    return tamano - 1;
 };
 
 simbolo* search(char * nombre, simbolo *t){
