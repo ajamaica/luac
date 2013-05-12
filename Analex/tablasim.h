@@ -42,6 +42,18 @@ void imprimir(simbolo *t)
     }
 };
 
+int tamano(simbolo *t)
+{
+    int tamano = 0;
+    while (t != NULL)
+    {
+        tamano++;
+        t = t->sig;
+        
+    }
+    return tamano;
+};
+
 simbolo* search(char * nombre, simbolo *t){
     simbolo * aux = (simbolo *) malloc(sizeof(simbolo));
     while (t->sig != NULL)
