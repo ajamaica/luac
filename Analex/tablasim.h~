@@ -23,11 +23,7 @@ simbolo * crear()
     return NULL;
 };
 
-void insertar(simbolo **p_t,simbolo *s)
-{
-    s->sig = (*p_t);
-    (*p_t) = s;
-};
+
 
 
 
@@ -36,27 +32,71 @@ void imprimir(simbolo *t)
     printf("Nombre | Tipo de Dato | Valor | Alcance\n");
     while (t != NULL)
     {
-        printf("---\n");
         printf("%s %s %i %i\n", t->nombre,t->tipo_de_dato,t->valor,t->alcance);
-                printf("---\n");
         t = t->sig;
 
     }
 };
 
+int tamano(simbolo *t)
+{
+    int tamano = 0;
+    while (t != NULL)
+    {
+        tamano++;
+        t = t->sig;
+        
+    }
+    return tamano - 1;
+};
+
 simbolo* search(char * nombre, simbolo *t){
     simbolo * aux = (simbolo *) malloc(sizeof(simbolo));
-    while (t != NULL && strcmp(t->nombre, nombre))
+    while (t->sig != NULL)
     {
+       
+       
+  
+        char buffer [50];
+        
+        sprintf (buffer, "%s\n", t->nombre);
+        
+        if(strcmp(buffer, nombre) == 0){
+            return t;
+        }
+        
         t = t->sig;
     }
-    if(t != NULL && !strcmp(t->nombre, nombre))
-    {
-        aux = t;
-    }
+  
     return aux;
 }
 
+int exist(char * nombre, simbolo *t){
+    while (t->sig != NULL)
+    {
+        
+        
+        
+        char buffer [50];
+        
+        sprintf (buffer, "%s", t->nombre);
+        
+        if(strcmp(buffer, nombre) == 0){
+            return 1;
+        }
+        
+        t = t->sig;
+    }
+    
+    return 0;
+}
+
+void insertar(simbolo **p_t,simbolo *s)
+{
+
+    s->sig = (*p_t);
+   (*p_t) = s;
+};
 
 
 #endif

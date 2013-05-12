@@ -71,6 +71,24 @@ simbolo* search(char * nombre, simbolo *t){
     return aux;
 }
 
+int indexOf(char * nombre, simbolo *t){
+    char buffer [50];
+    int index = 0;
+    while (t->sig != NULL)
+    {
+        sprintf (buffer, "%s", t->nombre);
+        
+        if(strcmp(buffer, nombre) == 0){
+            return index;
+        }
+        
+        t = t->sig;
+        index++;
+    }
+    
+    return -1;
+}
+
 int exist(char * nombre, simbolo *t){
     while (t->sig != NULL)
     {
