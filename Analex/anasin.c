@@ -728,7 +728,7 @@ int ok(){
 }
 
 int r(){
-    printStack(stack);
+    //printStack(stack);
     simbolo * amodificar;
     int numerodestack;
     char chardestack;
@@ -772,7 +772,7 @@ int r(){
     
     
     push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j], "");
-    printStack(stack);
+    //printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
     NodoArbol ** hojaAux;
