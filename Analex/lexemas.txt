@@ -8,12 +8,8 @@ while
 while
 (
 (
-i
-id
-<
-binop
-10
-numer
+false
+false
 )
 )
 do

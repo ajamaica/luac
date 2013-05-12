@@ -1,15 +1,15 @@
 i = 0
-while ( i < 10 ) do
+while ( true ) do
     i = i + 1
     if ( i > 9 ) then
         i = 0
     end
     if ( i == 0 ) then
-        P1 = 176
+        P1 = 192
     elseif ( i == 1 ) then
         P1 = 249
     elseif ( i == 2 ) then
-        P1 = 192
+        P1 = 164
     elseif ( i == 3 ) then
         P1 = 176
     elseif ( i == 4 ) then

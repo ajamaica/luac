@@ -1,0 +1,174 @@
+JMP Inicio
+NE:
+POP A
+MOV @A, #0
+POP A
+ SJMP A
+Inicio:
+MOV 09, #0 
+E1:    
+MOV A, 09 
+SUBB A, #10 
+MOV A, #0 
+RLC A 
+MOV 044, A 
+MOV A, 044 
+CJNE A, #0, E2 
+JMP E3
+E2:    
+MOV A, 09 
+ADD A, #1 
+MOV 011, A 
+MOV 09, 011 
+MOV A, #9 
+SUBB A, 09 
+MOV A, #0 
+RLC A 
+MOV 045, A 
+MOV A, 045 
+CJNE A, #0, E4 
+JMP E5
+E4:    
+MOV 09, #0 
+JMP E6
+E5:    
+E6:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #046
+MOV A, #0
+CJNE A, 09, NE
+MOV 046, #255
+MOV A, 046 
+CJNE A, #0, E7 
+JMP E8
+E7:    
+MOV 08, #192 
+JMP E9
+E8:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #047
+MOV A, #1
+CJNE A, 09, NE
+MOV 047, #255
+MOV A, 047 
+CJNE A, #0, E10 
+JMP E11
+E10:    
+MOV 08, #249 
+JMP E12
+E11:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #048
+MOV A, #2
+CJNE A, 09, NE
+MOV 048, #255
+MOV A, 048 
+CJNE A, #0, E13 
+JMP E14
+E13:    
+MOV 08, #164 
+JMP E15
+E14:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #049
+MOV A, #3
+CJNE A, 09, NE
+MOV 049, #255
+MOV A, 049 
+CJNE A, #0, E16 
+JMP E17
+E16:    
+MOV 08, #176 
+JMP E18
+E17:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #050
+MOV A, #4
+CJNE A, 09, NE
+MOV 050, #255
+MOV A, 050 
+CJNE A, #0, E19 
+JMP E20
+E19:    
+MOV 08, #153 
+JMP E21
+E20:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #051
+MOV A, #5
+CJNE A, 09, NE
+MOV 051, #255
+MOV A, 051 
+CJNE A, #0, E22 
+JMP E23
+E22:    
+MOV 08, #146 
+JMP E24
+E23:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #052
+MOV A, #6
+CJNE A, 09, NE
+MOV 052, #255
+MOV A, 052 
+CJNE A, #0, E25 
+JMP E26
+E25:    
+MOV 08, #130 
+JMP E27
+E26:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #053
+MOV A, #7
+CJNE A, 09, NE
+MOV 053, #255
+MOV A, 053 
+CJNE A, #0, E28 
+JMP E29
+E28:    
+MOV 08, #248 
+JMP E30
+E29:    
+MOV A, PC
+ADD A, #6
+PUSH A
+PUSH #054
+MOV A, #8
+CJNE A, 09, NE
+MOV 054, #255
+MOV A, 054 
+CJNE A, #0, E31 
+JMP E32
+E31:    
+MOV 08, #128 
+JMP E33
+E32:    
+MOV 08, #144 
+E33:    
+E30:    
+E27:    
+E24:    
+E21:    
+E18:    
+E15:    
+E12:    
+E9:    
+JMP E1
+E3:    
+END

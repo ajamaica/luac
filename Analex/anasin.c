@@ -30,6 +30,7 @@ int idxBool;
 int idxTerm;
 int idxRef;
 int nsimbolos;
+int logOp;
 char * valorTemp;
 int intBasura;
 char charBasura;
@@ -389,6 +390,20 @@ char* generaCuadruples(NodoArbol* AST)
         sprintf(cuadruples,"%s\n(%s,,,)",cuadruples,valorTemp);
         //printf("%s\n",cuadruples);
     }
+    else if (!strcmp(AST->valor,"true"))
+    {
+        idxBool++;
+        sprintf(cuadruples,"%s\n(MOVx,1,B%d,,)\n",cuadruples,idxBool);
+        sprintf(valorTemp,"B%d",idxBool);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
+    else if (!strcmp(AST->valor,"false"))
+    {
+        idxBool++;
+        sprintf(cuadruples,"%s\n(MOVx,0,B%d,,)\n",cuadruples,idxBool);
+        sprintf(valorTemp,"B%d",idxBool);
+        push(stackCuadruples,0,(char)0,valorTemp);
+    }
     else
     {
         // Truncamos valor
@@ -514,6 +529,7 @@ char* utilizaRegistroDisponible(char * valor, char* r){
 int traduceOperadores(char *operador){
     int index = indexOf(operador,&tabla_de_simbolos);
     int address = 0;
+    
     if(index != -1){
         address = index+8;
     } else if (operador[0] == 'T'){
@@ -563,7 +579,7 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 	i = 0;
 
     for(i = 1; i < 4; i ++){
-        if(operandos[i][0]!='#' && operandos[i][0]!='\0' && operandos[i][0] != 'E'){
+        if(operandos[i][0]!='#' && operandos[i][0]!='\0' && operandos[i][0] != 'E' && operandos[i][0] != 'P'){
             sprintf(operandos[i],"0%d",traduceOperadores(operandos[i]));
         }
     }    
@@ -585,6 +601,7 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 		fprintf(eout,"MOV A, #0 \n");
 		fprintf(eout,"RLC A \n");
 		fprintf(eout,"MOV %s, A \n",operandos[1]);
+		logOp = 0;
 	} else if(!strcmp(operandos[0],"ADDx\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"ADD A, %s \n",operandos[2]);
@@ -595,7 +612,14 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 		fprintf(eout,"MOV %s, A \n",operandos[1]);
 	}else if(!strcmp(operandos[0],"BRT\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[1]);
+		if(!logOp)
+		{
 		fprintf(eout,"CJNE A, #0, %s \n",operandos[3]);
+		}
+		else
+		{
+		    fprintf(eout,"JZ %s \n",operandos[3]);
+		}
 	} else if(!strcmp(operandos[0],"JUMP\0")){
 		fprintf(eout,"JMP %s\n",operandos[1]);
 	}else if(!strcmp(operandos[0],"DIVx\0")){
@@ -609,9 +633,12 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 		fprintf(eout,"MUL AB \n");
 		fprintf(eout,"MOV %s, A \n",operandos[1]);
 	}else if(!strcmp(operandos[0],"EQx\0")){
+		
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"SUBB A, %s \n",operandos[2]);
 		fprintf(eout,"MOV %s, A \n",operandos[1]);
+		logOp = 1;
+		
 	}else if(!strcmp(operandos[0],"AND\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"ANL A, %s \n",operandos[2]);
@@ -658,7 +685,6 @@ void postSin(){
     nsimbolos = tamano(&tabla_de_simbolos);
     printf("Tamano de la tabla de simbolos %i\n",nsimbolos);
 
-    
     while (tokenizados[i] != NULL) {
 		if (strcmp(tokenizados[i],"")){
 			printf(">> %s \n ",tokenizados[i]);
