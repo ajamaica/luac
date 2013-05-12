@@ -512,6 +512,9 @@ char* utilizaRegistroDisponible(char * valor, char* r){
 
 
 void generaEnsamblador(char * cuadruple, FILE * eout){
+    
+    printf("Tamano de la tabla de simbolos %i\n",tamano(&tabla_de_simbolos));
+    
 	char* operandos[4]; // El primer elemento es el operador y los demas son operandos (no siempre se utilizan los 3 operandos)
 	int i = 0, j = 1, len = 0, op;
 	while(i < 4){ //Incializamo el espacio de los operandos
