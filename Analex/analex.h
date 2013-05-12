@@ -399,7 +399,11 @@ int ids(worker *a , char c) {
                     sim->tipo_de_dato = (char *) malloc(sizeof(char*));
                     strcpy(sim->tipo_de_dato, "id");
 		    sim->valor = (int) -1;
-                    insertar(&ta,sim);
+
+                    if(!exist((*a).buf, ta)){
+                        insertar(&ta,sim);
+                    }
+                    
                     
 					fprintf(stdout, "%s\t%s\n",(*a).buf,"id");
 					lexema((*a).buf,"id" );
