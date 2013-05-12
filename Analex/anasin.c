@@ -513,7 +513,6 @@ char* utilizaRegistroDisponible(char * valor, char* r){
 
 void generaEnsamblador(char * cuadruple, FILE * eout){
     
-    printf("Tamano de la tabla de simbolos %i\n",tamano(&tabla_de_simbolos));
     
 	char* operandos[4]; // El primer elemento es el operador y los demas son operandos (no siempre se utilizan los 3 operandos)
 	int i = 0, j = 1, len = 0, op;
@@ -619,6 +618,10 @@ void postSin(){
     
     int i=0;
     //int j=1;
+    
+    printf("Tamano de la tabla de simbolos %i\n",tamano(&tabla_de_simbolos));
+
+    
     while (tokenizados[i] != NULL) {
 		if (strcmp(tokenizados[i],"")){
 			printf(">> %s \n ",tokenizados[i]);
