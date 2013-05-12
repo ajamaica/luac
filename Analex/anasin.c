@@ -513,7 +513,7 @@ char* utilizaRegistroDisponible(char * valor, char* r){
 
 void generaEnsamblador(char * cuadruple, FILE * eout){
 	char* operandos[4]; // El primer elemento es el operador y los demas son operandos (no siempre se utilizan los 3 operandos)
-	int i = 0, j = 1, len = 0, op;
+	int i = 0, j = 1, len = 0, numero = 0;
 	while(i < 4){ //Incializamo el espacio de los operandos
 		//printf("Inicializando registros");
 		operandos[i]=(char *) malloc(20);
@@ -526,16 +526,27 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 
 	while(cuadruple[j] != NULL){ //Obtenemos el operador y los operandos
 		if(cuadruple[j] != ',' && cuadruple[j] != ')'){
-			len = strlen(operandos[i]);
-			operandos[i][len] = cuadruple[j];
-			operandos[i][len + 1] = '\0';
+			if(numero && cuadruple[j] >= 48 && cuadruple[j] <= 57){
+				len = strlen(operandos[i]);
+				operandos[i][len] = '#';
+				operandos[i][len + 1] = cuadruple[j];
+				operandos[i][len + 2] = '\0';
+				numero = 0;
+			} else {
+				len = strlen(operandos[i]);
+				operandos[i][len] = cuadruple[j];
+				operandos[i][len + 1] = '\0';
+				numero = 0;
+			}
+			
 		} else {
+			numero = 1;
 			i++;
 		}
 		j++;
 	}
 	i = 0;
-	
+
 	/*printf("Operador %s ",operandos[0]);
 	printf(" Operando 1 %s ",operandos[1]);
 	printf(" Operando 2 %s ",operandos[2]);
