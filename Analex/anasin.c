@@ -586,7 +586,8 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 		fprintf(eout,"MOV %s, A \n",operandos[1]);
 	}else if(!strcmp(operandos[0],"EQx\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
-		fprintf(eout,"CJNE A, %s, %s \n",operandos[2],operandos[1]);
+		fprintf(eout,"SUB A, %s \n",operandos[2]);
+
 	}else if(!strcmp(operandos[0],"AND\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"ANL A, %s \n",operandos[2]);
@@ -728,7 +729,7 @@ int ok(){
 }
 
 int r(){
-    printStack(stack);
+    //printStack(stack);
     simbolo * amodificar;
     int numerodestack;
     char chardestack;
@@ -772,7 +773,7 @@ int r(){
     
     
     push(stack, loquevoyameter, reduccciones[tipo_de_reduccion][j], "");
-    printStack(stack);
+    //printStack(stack);
     //nuevoArbol es la raiz que se crea en cada reduccion
     NodoArbol ** nuevoArbol;
     NodoArbol ** hojaAux;

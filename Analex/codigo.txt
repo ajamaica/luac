@@ -1,6 +1,36 @@
 i = 0
+<<<<<<< HEAD
 
 if i < 0 then
 
 end
 
+=======
+while ( i < 10 ) do
+    i = i + 1
+    if ( i > 9 ) then
+        i = 0
+    end
+    if ( i == 0 ) then
+        P1 = 176
+    elseif ( i == 1 ) then
+        P1 = 249
+    elseif ( i == 2 ) then
+        P1 = 192
+    elseif ( i == 3 ) then
+        P1 = 176
+    elseif ( i == 4 ) then
+        P1 = 153
+    elseif ( i == 5 ) then
+        P1 = 146
+    elseif ( i == 6 ) then
+        P1 = 130
+    elseif ( i == 7 ) then
+        P1 = 248
+    elseif ( i == 8 ) then
+        P1 = 128
+    else
+        P1 = 144
+    end
+end
+>>>>>>> 2b9b09d90dc4faee7d91bf08556a234a454dd00e

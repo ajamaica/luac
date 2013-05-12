@@ -23,11 +23,7 @@ simbolo * crear()
     return NULL;
 };
 
-void insertar(simbolo **p_t,simbolo *s)
-{
-    s->sig = (*p_t);
-    (*p_t) = s;
-};
+
 
 
 
@@ -59,15 +55,13 @@ simbolo* search(char * nombre, simbolo *t){
     while (t->sig != NULL)
     {
        
-        printf("%s", t->nombre);
-        printf("%s",nombre);
+       
   
         char buffer [50];
         
         sprintf (buffer, "%s\n", t->nombre);
         
         if(strcmp(buffer, nombre) == 0){
-            printf("%s",nombre);
             return t;
         }
         
@@ -77,6 +71,32 @@ simbolo* search(char * nombre, simbolo *t){
     return aux;
 }
 
+int exist(char * nombre, simbolo *t){
+    while (t->sig != NULL)
+    {
+        
+        
+        
+        char buffer [50];
+        
+        sprintf (buffer, "%s", t->nombre);
+        
+        if(strcmp(buffer, nombre) == 0){
+            return 1;
+        }
+        
+        t = t->sig;
+    }
+    
+    return 0;
+}
+
+void insertar(simbolo **p_t,simbolo *s)
+{
+
+    s->sig = (*p_t);
+   (*p_t) = s;
+};
 
 
 #endif
