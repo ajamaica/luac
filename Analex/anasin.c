@@ -41,7 +41,7 @@ int main (int argc, const char * argv[]) {
     int i = 0;
     
     while(i < 8){
-	printf("Inicializando registros");
+	//printf("Inicializando registros");
 	registros[i]=(char *) malloc(sizeof(char *));
 	registros[i][0] = '\0';
 	strcpy(registros[i],"");
@@ -428,7 +428,7 @@ char** tokenize(const char* str)
     return result;
 }
 
-
+/*
 char * getValor(char ** tokenizados , int* i, int* j){
 	char *aux = (char *) malloc(20);
 	strcpy(aux,"");
@@ -468,23 +468,9 @@ char * getValor(char ** tokenizados , int* i, int* j){
 		}
 	}
 	return aux;
-}
+}*/
 
-char * getId(char ** tokenizados , int* i, int* j){
-	//printf("Trabajando getId i:%d j:%d \n",*i,*j);
-	char *aux = (char *) malloc(20);
-	strcpy(aux,"");
-	int len;
-	while(tokenizados[*i][*j] != NULL && tokenizados[*i][*j] >= 65 && tokenizados[*i][*j] <= 122 || tokenizados[*i][*j] >= 48 && tokenizados[*i][*j] <= 57){
-		len = strlen(aux);
-		aux[len] = tokenizados[*i][*j];
-		aux[len + 1] = '\0';
-		//printf("id: % s\n", aux);	
-		(*j)++;
-	}
-	return aux;
-}
-
+/*
 char* utilizaRegistroDisponible(char * valor, char* r){
 	int i = 0;
 	int ocupados = 0;
@@ -522,8 +508,84 @@ char* utilizaRegistroDisponible(char * valor, char* r){
 		return r;
 	}
 	
-}
+}*/
 
+
+void generaEnsamblador(char * cuadruple, FILE * eout){
+	char* operandos[4]; // El primer elemento es el operador y los demas son operandos (no siempre se utilizan los 3 operandos)
+	int i = 0, j = 1, len = 0, op;
+	while(i < 4){ //Incializamo el espacio de los operandos
+		//printf("Inicializando registros");
+		operandos[i]=(char *) malloc(20);
+		operandos[i][0] = '\0';
+		strcpy(operandos[i],"");
+		i++;
+    }
+	
+	i = 0;
+
+	while(cuadruple[j] != NULL){ //Obtenemos el operador y los operandos
+		if(cuadruple[j] != ',' && cuadruple[j] != ')'){
+			len = strlen(operandos[i]);
+			operandos[i][len] = cuadruple[j];
+			operandos[i][len + 1] = '\0';
+		} else {
+			i++;
+		}
+		j++;
+	}
+	i = 0;
+	
+	/*printf("Operador %s ",operandos[0]);
+	printf(" Operando 1 %s ",operandos[1]);
+	printf(" Operando 2 %s ",operandos[2]);
+	printf(" Operando 3 %s \n",operandos[3]);*/
+	
+
+	//Que porque recibe el archivo en lugar de abrirlo el mismo? 
+	//I don't fucking know! pero solo asi funciona 
+
+	if(!strcmp(operandos[0],"MOVx\0")){
+		fprintf(eout,"MOV %s, %s \n",operandos[2],operandos[1]);
+	} else if(!strcmp(operandos[0],"LTx\0")){
+		fprintf(eout,"LT %s, %s \n",operandos[1],operandos[2]);
+	} else if(!strcmp(operandos[0],"ADDx\0")){
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"ADD A, %s \n",operandos[2]);
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
+	} else if(!strcmp(operandos[0],"SUBx\0")){
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"SUB A, %s \n",operandos[2]);
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
+	}else if(!strcmp(operandos[0],"BRT\0")){
+		fprintf(eout,"BRT %s, %s \n",operandos[1],operandos[2]);
+	} else if(!strcmp(operandos[0],"JUMP\0")){
+		fprintf(eout,"JUMP %s, %s \n",operandos[1],operandos[2]);
+	}else if(!strcmp(operandos[0],"DIVx\0")){
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"MOV B, %s \n",operandos[2]);
+		fprintf(eout,"DIV AB \n");
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
+	}else if(!strcmp(operandos[0],"MULx\0")){
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"MOV B, %s \n",operandos[2]);
+		fprintf(eout,"MUL AB \n");
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
+	}else if(!strcmp(operandos[0],"EQx\0")){
+		//fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"CJNE %s, %s \n",operandos[2],operandos[1]);
+	}else if(!strcmp(operandos[0],"AND\0")){
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"ANL A, %s \n",operandos[2]);
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
+	}else if(!strcmp(operandos[0],"OR\0")){
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"ORL A, %s \n",operandos[2]);
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
+	}else {
+		fprintf(eout,"%s: %s %s %s \n",operandos[0],operandos[1],operandos[2],operandos[3]);
+	}
+}
 
 void postSin(){
     
@@ -537,25 +599,30 @@ void postSin(){
     char *cuadruples = (generaCuadruples(AST));
     
     FILE *fout = fopen ("cuadruples.txt", "w");
-    FILE *eout = fopen ("ensamblador.esm", "w");
+	FILE *eout = fopen ("ensamblador.asm", "w");
     if (fout != NULL) {
         fprintf (fout, "%s", cuadruples);
         fclose (fout);
     }
-
-    if(eout == NULL){
-	printf("Error reading esamblador \n");
+	if(eout == NULL){
+		printf("Error reading esamblador \n");
     }
+    /*if(eout == NULL){
+	printf("Error reading esamblador \n");
+    }*/
     
     char **tokenizados;
     tokenizados = tokenize(cuadruples);
     
     int i=0;
-    int j=1;
+    //int j=1;
     while (tokenizados[i] != NULL) {
-        printf(">> %s \n ",tokenizados[i]);
-	
-	if(tokenizados[i][j] == 'E'){
+		if (strcmp(tokenizados[i],"")){
+			printf(">> %s \n ",tokenizados[i]);
+			generaEnsamblador(tokenizados[i], eout);
+		}
+		//generaEnsamblador(tokenizados[i]);
+	/*if(tokenizados[i][j] == 'E'){
 			
 		if(tokenizados[i][++j] == 'Q'){
 			j += 3; //Saltamos 'x' ','
@@ -612,7 +679,7 @@ void postSin(){
 			char* aux3 = getValor(tokenizados, &i,&j);
 			fprintf(eout,"MOVE A %s \n", aux2);
 			fprintf(eout,"ADD %s \n", aux3);
-			fprintf(eout,"MOVE %s A \n", aux);*/
+			fprintf(eout,"MOVE %s A \n", aux);
 		} else{	
 			j+=3; //Saltando ND
 			char* aux = getValor(tokenizados, &i,&j);
@@ -625,12 +692,11 @@ void postSin(){
 			fprintf(eout,"MOVE %s A \n", aux);
 		}
 	}
-
-        i++; //Next line
-	j=1;
-	
+        
+		j=1;*/
+	i++; //Next line
     }
-    
+    fprintf(eout,"END\n");
      fclose (eout);
 
 }

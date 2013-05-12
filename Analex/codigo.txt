@@ -1,4 +1,4 @@
-i = 1999
+i = 0
 while ( i < 10 ) do
     i = i + 1
     if ( i > 9 ) then

@@ -2,7 +2,7 @@ i
 id
 =
 =
-1999
+0
 numer
 while
 while
