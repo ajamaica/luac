@@ -363,7 +363,7 @@ char* generaCuadruples(NodoArbol* AST)
         idxRef++;
         sprintf(cuadruples,"%s\n(JUMP,E%d,,)",cuadruples,idxRef);
         //Imprimo la etiqueta de true
-        sprintf(cuadruples,"%s,\n(E%d,,,)",cuadruples,idxRef-1);
+        sprintf(cuadruples,"%s\n(E%d,,,)",cuadruples,idxRef-1);
         //Introduzco la etiqueta de false
         sprintf(valorTemp,"E%d",idxRef);
         push(stackCuadruples,0,(char)0,valorTemp);
