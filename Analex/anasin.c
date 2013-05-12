@@ -561,7 +561,11 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 	if(!strcmp(operandos[0],"MOVx\0")){
 		fprintf(eout,"MOV %s, %s \n",operandos[2],operandos[1]);
 	} else if(!strcmp(operandos[0],"LTx\0")){
-		fprintf(eout,"LT %s, %s \n",operandos[1],operandos[2]);
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"SUB A, %s \n",operandos[2]);
+		fprintf(eout,"MOV A, #0 \n");
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
+		fprintf(eout,"MOV %s, C \n",operandos[1]);
 	} else if(!strcmp(operandos[0],"ADDx\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"ADD A, %s \n",operandos[2]);
@@ -571,7 +575,8 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 		fprintf(eout,"SUB A, %s \n",operandos[2]);
 		fprintf(eout,"MOV %s, A \n",operandos[1]);
 	}else if(!strcmp(operandos[0],"BRT\0")){
-		fprintf(eout,"BRT %s, %s \n",operandos[1],operandos[2]);
+		fprintf(eout,"MOV A, %s \n",operandos[1]);
+		fprintf(eout,"CJNE A, #0 %s \n",operandos[3]);
 	} else if(!strcmp(operandos[0],"JUMP\0")){
 		fprintf(eout,"JUMP %s, %s \n",operandos[1],operandos[2]);
 	}else if(!strcmp(operandos[0],"DIVx\0")){
@@ -587,7 +592,7 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 	}else if(!strcmp(operandos[0],"EQx\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"SUB A, %s \n",operandos[2]);
-
+		fprintf(eout,"MOV %s, A \n",operandos[1]);
 	}else if(!strcmp(operandos[0],"AND\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"ANL A, %s \n",operandos[2]);
