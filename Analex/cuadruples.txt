@@ -1,13 +1,16 @@
 
 
 
+(MOVx,0,i,,)
 
 
 
+(LTx,B1,i,0)
+(BRT,B1,,E1)
+(JUMP,E2,,),
+(E1,,,)
 
+(JUMP,E3,,)
+(E2,,,)
 
-(ADDx,T1,b23,0)
-(ADDx,T2,10222,T1)
-(ADDx,T3,i34233,T2)
-
-(MOVx,T3,i,,)
+(E3,,,)

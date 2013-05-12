@@ -1,11 +1,9 @@
-MOV A, #0 
-ADD A, b23 
-MOV T1, A 
-MOV A, T1 
-ADD A, #10222 
-MOV T2, A 
-MOV A, T2 
-ADD A, i34233 
-MOV T3, A 
-MOV i, T3 
+MOV i, #0 
+LT B1, i 
+BRT B1,  
+JUMP E2,  
+E1:    
+JUMP E3,  
+E2:    
+E3:    
 END

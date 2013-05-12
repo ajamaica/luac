@@ -585,8 +585,8 @@ void generaEnsamblador(char * cuadruple, FILE * eout){
 		fprintf(eout,"MUL AB \n");
 		fprintf(eout,"MOV %s, A \n",operandos[1]);
 	}else if(!strcmp(operandos[0],"EQx\0")){
-		//fprintf(eout,"MOV A, %s \n",operandos[3]);
-		fprintf(eout,"CJNE %s, %s \n",operandos[2],operandos[1]);
+		fprintf(eout,"MOV A, %s \n",operandos[3]);
+		fprintf(eout,"CJNE A, %s, %s \n",operandos[2],operandos[1]);
 	}else if(!strcmp(operandos[0],"AND\0")){
 		fprintf(eout,"MOV A, %s \n",operandos[3]);
 		fprintf(eout,"ANL A, %s \n",operandos[2]);
