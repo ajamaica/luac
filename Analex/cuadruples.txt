@@ -5,7 +5,7 @@
 
 
 
-(EQx,B1,0,i)
+(LTx,B1,i,0)
 (BRT,B1,,E1)
 (JUMP,E2,,)
 (E1,,,)

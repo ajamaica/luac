@@ -8,7 +8,7 @@ if
 if
 i
 id
-==
+<
 binop
 0
 numer
