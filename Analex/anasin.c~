@@ -399,9 +399,10 @@ char* generaCuadruples(NodoArbol* AST)
     }
     else if (!strcmp(AST->valor,"false"))
     {
-        char *token;
-        token = sprintf("%d",0);
-        push(stackCuadruples,0,(char)0,token);
+        idxBool++;
+        sprintf(cuadruples,"%s\n(MOVx,0,B%d,,)\n",cuadruples,idxBool);
+        sprintf(valorTemp,"B%d",idxBool);
+        push(stackCuadruples,0,(char)0,valorTemp);
     }
     else
     {
